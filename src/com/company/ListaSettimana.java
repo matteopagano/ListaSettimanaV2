@@ -1,10 +1,7 @@
 package com.company;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -125,8 +122,6 @@ public class ListaSettimana {
     }
 
     public void stampaListaV2() throws PrinterException {
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 
         // frame
         JFrame f;
@@ -147,12 +142,15 @@ public class ListaSettimana {
         };
 
         // Column Names
-        String[] columnNames = { "Dal          al         ", "LUNEDI", "MARTEDI", "MERCOLEDI", "GIOVEDI", "VENERDI", "SABATO", "DOMENICA", "TOT. SERATE" };
+        String[] columnNames = { "Dal     al        ", "LUNEDI", "MARTEDI", "MERCOLEDI", "GIOVEDI", "VENERDI", "SABATO", "DOMENICA", "TOT. SERATE" };
 
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         // Initializing the JTable
 
+
+
         j = new JTable(tableModel);
+        j.getTableHeader().setFont(new Font("Ariel", Font.BOLD, 12));
         j.setRowHeight(30);
         Object[] o;
         {
@@ -236,21 +234,30 @@ public class ListaSettimana {
 
 
         for(int x=0;x<j.getColumnCount();x++){
+            DefaultTableCellRenderer rdr = new DefaultTableCellRenderer() {
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,boolean hasFocus, int row, int column) {
+                    super.getTableCellRendererComponent(
+                            table, value, isSelected, hasFocus, row, column);
+                    setHorizontalAlignment(JLabel.CENTER);
+                    setFont(getFont().deriveFont(12f));
+                    return this;
+                }
+
+            };
+
             TableColumn col = j.getColumnModel().getColumn(x);
+            col.setCellRenderer(rdr);
 
-
-            col.setCellRenderer( centerRenderer );
-            col.setCellEditor(new MyTableCellEditor());
         }
 
-        j.setBounds(60, 60, 200, 300);
+        j.setBounds(60, 60, 50, 300);
 
         // adding it to JScrollPane
         JScrollPane sp = new JScrollPane(j);
         sp.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
         f.add(sp);
         // Frame Size
-        f.setSize(1000, 330);
+        f.setSize(825, 330);
         // Frame Visible = true
         f.setVisible(true);
         PrinterJob pjob = PrinterJob.getPrinterJob();
@@ -282,20 +289,23 @@ public class ListaSettimana {
         return bool;
     }
 
-    public static class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
-        JComponent component = new JTextField();
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int vColIndex) {
-            ((JTextField)component).setText((String)value);
-            ((JTextField)component).setFont(new java.awt.Font("Arial Unicode MS", 0, 12));
+    public class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
+        private JTextField component = new JTextField();
+        private Font font = new Font("Arial Unicode MS", 0, 1);
 
+        public Component getTableCellEditorComponent(JTable table,
+                                                     Object value, boolean isSelected, int rowIndex, int vColIndex) {
+            component.setText((String) value);
+            component.setFont(font);
             return component;
         }
 
         @Override
         public Object getCellEditorValue() {
-            return null;
+            return component.getText();
         }
     }
+
 
     public static class Printer implements Printable {
         final Component comp;
