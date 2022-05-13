@@ -227,7 +227,7 @@ public class ListaSettimana {
                     }
                 }
             }
-            objs = new Object[]{nome,lunedi,martedi,mercoledi,giovedi,venerdi,sabato,domenica,totSere};
+            objs = new Object[]{nome,lunedi,martedi,mercoledi,giovedi,venerdi,sabato,domenica,""};
             tableModel.addRow(objs);
 
         }

@@ -23,10 +23,10 @@ public class Main {
         final String idk = "\u001B[38m";
 
 
-        GiornoLista LunediLista=new GiornoLista("Lunedì",6);
+        GiornoLista LunediLista=new GiornoLista("Lunedì",2);
         GiornoLista MartedìLista=new GiornoLista("Martedì",3);
         GiornoLista MercolediLista=new GiornoLista("Mercoledì",3);
-        GiornoLista GiovediLista=new GiornoLista("Giovedì",4);
+        GiornoLista GiovediLista=new GiornoLista("Giovedì",3);
         GiornoLista VenerdiLista=new GiornoLista("Venerdì",5);
         GiornoLista SabatoLista=new GiornoLista("Sabato",6);
         GiornoLista DomenicaLista=new GiornoLista("Domenica",6);
@@ -49,47 +49,51 @@ public class Main {
         Giorno domenica=Giorno.getDomenica();
 
 
-        Persona matteo = new Persona(4,"M",ANSI_RED, "Matteo Piccolo");
-        Persona matteoNicolo = new Persona(5,"M/N",ANSI_GREEN, "Matteo Grande");
+        Persona matteo = new Persona(3,"M",ANSI_RED, "Matteo Piccolo");
+        Persona matteoNicolo = new Persona(4,"M/N",ANSI_GREEN, "Matteo Grande");
         Persona gigi = new Persona(4,"G",ANSI_YELLOW, "Gigi");
-        Persona enrico = new Persona(5,"E",ANSI_BLUE, "Enrico");
+        Persona enrico = new Persona(4,"E",ANSI_BLUE, "Enrico");
         Persona lally = new Persona(4,"F",ANSI_PURPLE, "Filippo");
         Persona pietro = new Persona(4,"D",ANSI_CYAN, "Pietro");
         Persona pandi = new Persona(4,"P",ANSI_WHITE, "Pandolfo");
-        Persona omar = new Persona(3,"O",idk, "Omar");
+        Persona omar = new Persona(1,"O",idk, "Omar");
 
         List<Giorno> assenzeMatteo=new ArrayList<>();
 
         //pietro -> enrico -> gigi -> lally -> (pandi me matteo)
 
         List<Giorno> assenzeNicolo=new ArrayList<>();
-        assenzeNicolo.add(sabato);
+        assenzeNicolo.add(martedi);
+        assenzeNicolo.add(mercoledi);
         assenzeNicolo.add(domenica);
 
 
         List<Giorno> assenzeGigi=new ArrayList<>();
+        assenzeGigi.add(lunedi);
         assenzeGigi.add(martedi);
         assenzeGigi.add(mercoledi);
-        assenzeGigi.add(giovedi);
+
 
         List<Giorno> assenzeEnrico=new ArrayList<>();
-        assenzeEnrico.add(lunedi);
+        assenzeEnrico.add(giovedi);
+        assenzeEnrico.add(sabato);
         assenzeEnrico.add(domenica);
 
         List<Giorno> assenzeLally=new ArrayList<>();
-        assenzeLally.add(martedi);
+        assenzeLally.add(lunedi);
         assenzeLally.add(giovedi);
+        assenzeLally.add(venerdi);
 
 
         List<Giorno> assenzePietro=new ArrayList<>();
+        assenzePietro.add(lunedi);
         assenzePietro.add(martedi);
-        assenzePietro.add(mercoledi);
-        assenzePietro.add(giovedi);
+        assenzePietro.add(venerdi);
 
         List<Giorno> assenzePandi=new ArrayList<>();
         assenzePandi.add(lunedi);
+        assenzePandi.add(mercoledi);
         assenzePandi.add(giovedi);
-        assenzePandi.add(venerdi);
 
         List<Giorno> assenzeOmar = new ArrayList<>();
 
