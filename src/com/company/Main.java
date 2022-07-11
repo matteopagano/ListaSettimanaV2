@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws PrinterException {
+    public static void main(String[] args) throws Exception {
 
 
         List<Persona> listaPersona = new ArrayList<>();
@@ -23,13 +23,13 @@ public class Main {
         final String idk = "\u001B[38m";
 
 
-        GiornoLista LunediLista=new GiornoLista("Lunedì",2);
-        GiornoLista MartedìLista=new GiornoLista("Martedì",3);
+        GiornoLista LunediLista=new GiornoLista("Lunedì",3);
+        GiornoLista MartedìLista=new GiornoLista("Martedì",2);
         GiornoLista MercolediLista=new GiornoLista("Mercoledì",3);
         GiornoLista GiovediLista=new GiornoLista("Giovedì",3);
-        GiornoLista VenerdiLista=new GiornoLista("Venerdì",5);
-        GiornoLista SabatoLista=new GiornoLista("Sabato",6);
-        GiornoLista DomenicaLista=new GiornoLista("Domenica",6);
+        GiornoLista VenerdiLista=new GiornoLista("Venerdì",4);
+        GiornoLista SabatoLista=new GiornoLista("Sabato",5);
+        GiornoLista DomenicaLista=new GiornoLista("Domenica",5);
 
         List<GiornoLista> listaGiorni=new ArrayList<>();
         listaGiorni.add(LunediLista);
@@ -53,19 +53,19 @@ public class Main {
         Persona matteoNicolo = new Persona(4,"M/N",ANSI_GREEN, "Matteo Grande");
         Persona gigi = new Persona(4,"G",ANSI_YELLOW, "Gigi");
         Persona enrico = new Persona(4,"E",ANSI_BLUE, "Enrico");
-        Persona lally = new Persona(4,"F",ANSI_PURPLE, "Filippo");
+        Persona lally = new Persona(3,"F",ANSI_PURPLE, "Filippo");
         Persona pietro = new Persona(4,"D",ANSI_CYAN, "Pietro");
-        Persona pandi = new Persona(4,"P",ANSI_WHITE, "Pandolfo");
-        Persona omar = new Persona(1,"O",idk, "Omar");
+        Persona pandi = new Persona(3,"P",ANSI_WHITE, "Pandolfo");
+        Persona omar = new Persona(0,"O",idk, "Omar");
 
         List<Giorno> assenzeMatteo=new ArrayList<>();
+        assenzeMatteo.add(sabato);
 
         //pietro -> enrico -> gigi -> lally -> (pandi me matteo)
 
         List<Giorno> assenzeNicolo=new ArrayList<>();
-        assenzeNicolo.add(martedi);
-        assenzeNicolo.add(mercoledi);
-        assenzeNicolo.add(domenica);
+        assenzeNicolo.add(giovedi);
+        assenzeNicolo.add(venerdi);
 
 
         List<Giorno> assenzeGigi=new ArrayList<>();
@@ -74,24 +74,25 @@ public class Main {
         assenzeGigi.add(mercoledi);
 
 
+
+
         List<Giorno> assenzeEnrico=new ArrayList<>();
-        assenzeEnrico.add(giovedi);
-        assenzeEnrico.add(sabato);
-        assenzeEnrico.add(domenica);
+        assenzeEnrico.add(lunedi);
+        assenzeEnrico.add(martedi);
+
 
         List<Giorno> assenzeLally=new ArrayList<>();
         assenzeLally.add(lunedi);
-        assenzeLally.add(giovedi);
-        assenzeLally.add(venerdi);
+        assenzeLally.add(domenica);
 
 
         List<Giorno> assenzePietro=new ArrayList<>();
-        assenzePietro.add(lunedi);
-        assenzePietro.add(martedi);
-        assenzePietro.add(venerdi);
+        assenzePietro.add(sabato);
+        assenzePietro.add(domenica);
 
         List<Giorno> assenzePandi=new ArrayList<>();
         assenzePandi.add(lunedi);
+        assenzePandi.add(martedi);
         assenzePandi.add(mercoledi);
         assenzePandi.add(giovedi);
 
@@ -162,7 +163,7 @@ public class Main {
             cond = false;
             System.out.println("Controlla Venerdì");
             System.out.println("Venerdì hai inserito le assenze di " + prova[4] + " persone.");
-        }else if(prova[5] + SabatoLista.getNumeroGiorniMAx() > listaPersona.size()){
+        }else if(prova[5] + SabatoLista.getNumeroGiorniMAx() >listaPersona.size()){
             cond = false;
             System.out.println("Controlla Sabato");
             System.out.println("Sabato hai inserito le assenze di " + prova[5] + " persone.");
@@ -194,7 +195,8 @@ public class Main {
             }
             else{
                 if(cond){
-                    l.calcolaLista();
+                    //l.calcolaLista();
+                    l.calcola();
                 }
             }
         }

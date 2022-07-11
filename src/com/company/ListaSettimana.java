@@ -9,6 +9,10 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ListaSettimana {
     private List<Persona> listaPersone;
@@ -20,7 +24,7 @@ public class ListaSettimana {
 
     }
 
-    public void calcolaLista() throws PrinterException {
+    public void calcolaLista() throws PrinterException, Exception {
         /*for (Persona p:listaPersone){
             System.out.println(p);
         }
@@ -70,7 +74,12 @@ public class ListaSettimana {
                 //System.out.println();
                 //stampaLista();
                 //System.out.println("RICALCOLANDO LISTA!");
-                calcolaLista();
+                try{
+                    calcolaLista();
+                }catch (StackOverflowError e){
+                    System.out.println("Non esistono combinazioni possibili, controlla i giorni");
+                }
+
             }else {
                 System.out.println();
                 //System.out.println("CORRETTA");
@@ -85,6 +94,82 @@ public class ListaSettimana {
             g.getListaDiPersona().clear();
         }
     }
+
+    public void calcola() throws PrinterException {
+        boolean cond1 = true;
+        int i=0;
+        while(i<1100000 && cond1){
+            if(calcolaAux()){
+                cond1 = false;
+            }
+            i++;
+        }
+        if(cond1){
+            System.out.println("Non esistono combinazioni");
+        }
+    }
+    private boolean calcolaAux() throws PrinterException {
+        /*for (Persona p:listaPersone){
+            System.out.println(p);
+        }
+        */
+        List<Persona> lista=new ArrayList<>();
+        for (Persona p:listaPersone){
+            for (int i=0;i<p.getNumeroGiorni();++i)
+                lista.add(p);
+        }
+        /*
+        for(Persona p:lista){
+            System.out.print(p.getAbbreviazione()+", ");
+        }
+        */
+
+        Collections.shuffle(lista);
+        /*
+        System.out.println("MESCOLO LA LISTA:");
+        for(Persona p:lista){
+            System.out.print(p.getAbbreviazione()+", ");
+
+        }
+        */
+        //System.out.println();
+        Queue<Persona> coda= new LinkedList<>();
+        coda.addAll(lista);
+        while(!coda.isEmpty()){
+            Persona personaDaAddare=coda.poll();
+            //System.out.println();
+            //System.out.println("HO estratto: "+personaDaAddare.getAbbreviazione());
+            Iterator<GiornoLista> it=listaGiorni.iterator();
+            boolean aggiunto=false;
+            while(!aggiunto && it.hasNext()){
+                GiornoLista g=it.next();
+                if(!g.isFull()&&isAddable(personaDaAddare,g)&&!alreadyPresent(personaDaAddare,g)){
+                    g.addPersona(personaDaAddare);
+                    aggiunto=true;
+                }
+            }
+        }
+        //stampaLista();
+        //System.out.println();
+        if(!isCorrectLista()){
+            //System.out.println("LISTA CLEARATA!");
+            //System.out.println("Lista clear...");
+            clearGiorni();
+            //System.out.println();
+            //stampaLista();
+            //System.out.println("RICALCOLANDO LISTA!");
+            return false;
+
+        }else {
+            System.out.println();
+            //System.out.println("CORRETTA");
+            stampaLista();
+            stampaListaV2();
+            //upGrade();
+            return true;
+        }
+    }
+
 
     private boolean isCorrectLista() {
         boolean bool=true;
@@ -345,4 +430,6 @@ public class ListaSettimana {
             return Printable.PAGE_EXISTS;
         }
     }
+
+
 }
