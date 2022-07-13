@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Persona {
     private String abbreviazione;
@@ -17,6 +18,10 @@ public class Persona {
         this.abbreviazione=m;
         this.numeroGiorni=i;
         this.color=color;
+    }
+
+    public Persona(String m) {
+        this.abbreviazione=m;
     }
 
     public void addListaAssenze(List<Giorno> assenze) {
@@ -53,5 +58,22 @@ public class Persona {
     }
     public String getNome(){
         return nome;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Persona persona = (Persona) o;
+        return Objects.equals(abbreviazione, persona.abbreviazione);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(abbreviazione);
+    }
+
+    public void setAbbreviazione(String abbreviazione) {
+        this.abbreviazione = abbreviazione;
     }
 }

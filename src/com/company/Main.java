@@ -54,49 +54,34 @@ public class Main {
         Persona gigi = new Persona(4,"G",ANSI_YELLOW, "Gigi");
         Persona enrico = new Persona(4,"E",ANSI_BLUE, "Enrico");
         Persona lally = new Persona(3,"F",ANSI_PURPLE, "Filippo");
-        Persona pietro = new Persona(4,"D",ANSI_CYAN, "Pietro");
+        Persona pietro = new Persona(3,"D",ANSI_CYAN, "Pietro");
         Persona pandi = new Persona(3,"P",ANSI_WHITE, "Pandolfo");
-        Persona omar = new Persona(0,"O",idk, "Omar");
+        Persona omar = new Persona(1,"O",idk, "Omar");
 
         List<Giorno> assenzeMatteo=new ArrayList<>();
-        assenzeMatteo.add(sabato);
 
         //pietro -> enrico -> gigi -> lally -> (pandi me matteo)
 
         List<Giorno> assenzeNicolo=new ArrayList<>();
-        assenzeNicolo.add(giovedi);
-        assenzeNicolo.add(venerdi);
 
 
         List<Giorno> assenzeGigi=new ArrayList<>();
-        assenzeGigi.add(lunedi);
-        assenzeGigi.add(martedi);
-        assenzeGigi.add(mercoledi);
 
 
 
 
         List<Giorno> assenzeEnrico=new ArrayList<>();
-        assenzeEnrico.add(lunedi);
-        assenzeEnrico.add(martedi);
 
 
         List<Giorno> assenzeLally=new ArrayList<>();
-        assenzeLally.add(lunedi);
-        assenzeLally.add(domenica);
 
 
         List<Giorno> assenzePietro=new ArrayList<>();
-        assenzePietro.add(sabato);
-        assenzePietro.add(domenica);
 
         List<Giorno> assenzePandi=new ArrayList<>();
-        assenzePandi.add(lunedi);
-        assenzePandi.add(martedi);
-        assenzePandi.add(mercoledi);
-        assenzePandi.add(giovedi);
 
         List<Giorno> assenzeOmar = new ArrayList<>();
+
 
 
 
@@ -173,8 +158,22 @@ public class Main {
             System.out.println("Domenica hai inserito le assenze di " + prova[6] + " persone.");
         }
 
-        ListaSettimana l=new ListaSettimana(listaPersona);
-        ListaSettimana l1=new ListaSettimana(listaPersona);
+        ArrayList<Persona> personeMacchinaPropria = new ArrayList<>();
+        personeMacchinaPropria.add(pandi);
+        personeMacchinaPropria.add(enrico);
+        personeMacchinaPropria.add(gigi);
+        personeMacchinaPropria.add(lally);
+        personeMacchinaPropria.add(omar);
+
+        ArrayList<Persona> personeMacchinaPizzeria = new ArrayList<>();
+        personeMacchinaPizzeria.add(matteo);
+        personeMacchinaPizzeria.add(pietro);
+
+        ArrayList<Persona> personeMotorinoPizzeria = new ArrayList<>();
+        personeMotorinoPizzeria.add(matteoNicolo);
+
+        ListaSettimana l=new ListaSettimana(listaPersona, personeMacchinaPropria, personeMacchinaPizzeria, personeMotorinoPizzeria, 2);
+
 
         if(l.isCorrectOccorrenzePersone()){
             l.add(listaGiorni);

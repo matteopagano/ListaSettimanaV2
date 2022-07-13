@@ -9,18 +9,18 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.*;
 import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ListaSettimana {
     private List<Persona> listaPersone;
     private List<GiornoLista> listaGiorni;
+    private MacchinePizzeria macchine;
 
-    public ListaSettimana(List<Persona> listaPersona) {
+    public ListaSettimana(List<Persona> listaPersona, List<Persona> personeMacchinaPropria, List<Persona> personeMacchinaPizzeria, List<Persona> personeMotorinoPizzeria, int numeroMacchineDisponibiliPizzeria) {
         this.listaPersone=listaPersona;
         this.listaGiorni=new ArrayList<>();
+        macchine = new MacchinePizzeria(personeMacchinaPropria, personeMacchinaPizzeria, personeMotorinoPizzeria, numeroMacchineDisponibiliPizzeria);
 
     }
 
@@ -91,7 +91,7 @@ public class ListaSettimana {
 
     private void clearGiorni() {
         for (GiornoLista g:listaGiorni){
-            g.getListaDiPersona().clear();
+            g.getListaDiPersoneWithCar().clear();
         }
     }
 
@@ -109,36 +109,18 @@ public class ListaSettimana {
         }
     }
     private boolean calcolaAux() throws PrinterException {
-        /*for (Persona p:listaPersone){
-            System.out.println(p);
-        }
-        */
+
         List<Persona> lista=new ArrayList<>();
         for (Persona p:listaPersone){
             for (int i=0;i<p.getNumeroGiorni();++i)
                 lista.add(p);
         }
-        /*
-        for(Persona p:lista){
-            System.out.print(p.getAbbreviazione()+", ");
-        }
-        */
 
         Collections.shuffle(lista);
-        /*
-        System.out.println("MESCOLO LA LISTA:");
-        for(Persona p:lista){
-            System.out.print(p.getAbbreviazione()+", ");
-
-        }
-        */
-        //System.out.println();
         Queue<Persona> coda= new LinkedList<>();
         coda.addAll(lista);
         while(!coda.isEmpty()){
             Persona personaDaAddare=coda.poll();
-            //System.out.println();
-            //System.out.println("HO estratto: "+personaDaAddare.getAbbreviazione());
             Iterator<GiornoLista> it=listaGiorni.iterator();
             boolean aggiunto=false;
             while(!aggiunto && it.hasNext()){
@@ -149,22 +131,20 @@ public class ListaSettimana {
                 }
             }
         }
-        //stampaLista();
-        //System.out.println();
         if(!isCorrectLista()){
-            //System.out.println("LISTA CLEARATA!");
-            //System.out.println("Lista clear...");
-            clearGiorni();
-            //System.out.println();
-            //stampaLista();
-            //System.out.println("RICALCOLANDO LISTA!");
             return false;
 
         }else {
             System.out.println();
             //System.out.println("CORRETTA");
+            //stampaLista();
+            //System.out.println();
+            //System.out.println("Modifiche macchine...");
+            System.out.println();
+            this.macchine.setCar(this);
             stampaLista();
-            stampaListaV2();
+
+            //stampaListaV2();
             //upGrade();
             return true;
         }
@@ -174,7 +154,7 @@ public class ListaSettimana {
     private boolean isCorrectLista() {
         boolean bool=true;
         for (GiornoLista g:listaGiorni){
-            if(g.getListaDiPersona().size()!=g.getNumeroGiorniMAx()){
+            if(g.getListaDiPersoneWithCar().size()!=g.getNumeroGiorniMAx()){
                 bool=false;
             }
         }
@@ -183,11 +163,13 @@ public class ListaSettimana {
 
     private boolean alreadyPresent(Persona personaDaAddare, GiornoLista g) {
         boolean bool=false;
-        for(Persona g1:g.getListaDiPersona()){
-            if(g1.getAbbreviazione().equals(personaDaAddare.getAbbreviazione())) bool=true;
+        for(Tuple<Persona,Boolean> g1:g.getListaDiPersoneWithCar()){
+            if(g1.getPerson().getAbbreviazione().equals(personaDaAddare.getAbbreviazione())) bool=true;
         }
         return bool;
     }
+
+
 
     public static boolean isAddable(Persona personaDaAddare, GiornoLista g) {
         boolean bool=true;
@@ -202,8 +184,10 @@ public class ListaSettimana {
 
     public void stampaLista() {
         for (GiornoLista g:listaGiorni){
-            System.out.println(g.getName()+": "+g.getListaDiPersona());
+            System.out.println(g.getName()+": "+g.getListaDiPersoneWithCar());
         }
+        System.out.println();
+        System.out.println("* = macchina propria.");
     }
 
     public void stampaListaV2() throws PrinterException {
@@ -284,31 +268,111 @@ public class ListaSettimana {
             for(GiornoLista g : listaGiorni){
                 if(g.getName().equals("Lunedì")){
                     if(alreadyPresent(p,g)){
-                        lunedi = "X";
+
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            lunedi = "\u24CD";
+                        }else{
+                            lunedi = "X";
+                        }
+
+
                     }
                 }else if(g.getName().equals("Martedì")){
                     if(alreadyPresent(p,g)){
-                        martedi = "X";
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            martedi = "\u24CD";
+                        }else{
+                            martedi = "X";
+                        }
                     }
                 }else if(g.getName().equals("Mercoledì")){
                     if(alreadyPresent(p,g)){
-                        mercoledi = "X";
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            mercoledi = "\u24CD";
+                        }else{
+                            mercoledi = "X";
+                        }
                     }
                 }else if(g.getName().equals("Giovedì")){
                     if(alreadyPresent(p,g)){
-                        giovedi = "X";
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            giovedi = "\u24CD";
+                        }else{
+                            giovedi = "X";
+                        }
                     }
                 }else if(g.getName().equals("Venerdì")){
                     if(alreadyPresent(p,g)){
-                        venerdi = "X";
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            venerdi = "\u24CD";
+                        }else{
+                            venerdi = "X";
+                        }
                     }
                 }else if(g.getName().equals("Sabato")){
                     if(alreadyPresent(p,g)){
-                        sabato = "X";
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            sabato = "\u24CD";
+                        }else{
+                            sabato = "X";
+                        }
                     }
                 }else if(g.getName().equals("Domenica")){
                     if(alreadyPresent(p,g)){
-                        domenica = "X";
+                        ArrayList<Tuple<Persona,Boolean>> l = g.getListaDiPersoneWithCar().stream().filter(new Predicate<Tuple<Persona, Boolean>>() {
+                            @Override
+                            public boolean test(Tuple<Persona, Boolean> personaBooleanTuple) {
+                                return personaBooleanTuple.equals(new Tuple<>(new Persona(p.getAbbreviazione()), true));
+                            }
+                        }).collect(Collectors.toCollection(ArrayList::new));
+
+                        if(l.get(0).getUsaMacchinaPropria()){
+                            domenica = "\u24CD";
+                        }else{
+                            domenica = "X";
+                        }
                     }
                 }
             }
@@ -374,7 +438,7 @@ public class ListaSettimana {
         return bool;
     }
 
-    public class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
+    public static class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
         private JTextField component = new JTextField();
         private Font font = new Font("Arial Unicode MS", 0, 1);
 
@@ -390,7 +454,6 @@ public class ListaSettimana {
             return component.getText();
         }
     }
-
 
     public static class Printer implements Printable {
         final Component comp;
@@ -429,6 +492,10 @@ public class ListaSettimana {
 
             return Printable.PAGE_EXISTS;
         }
+    }
+
+    public List<GiornoLista> getListaGiorni() {
+        return listaGiorni;
     }
 
 

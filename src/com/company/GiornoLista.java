@@ -7,15 +7,15 @@ public class GiornoLista{
 
     private int numeroGiorniMAx;
     private String name;
-    private List<Persona> listaDiPersona;
+    private List<Tuple<Persona, Boolean>> listaDiPersone;
 
     public GiornoLista(String g,int n) {
-        listaDiPersona=new ArrayList<>();
+        listaDiPersone=new ArrayList<>();
         name=g;
         numeroGiorniMAx=n;
     }
     public void addPersona(Persona p){
-        listaDiPersona.add(p);
+        listaDiPersone.add(new Tuple<>(p, false));
     }
 
     public String getName() {
@@ -26,12 +26,25 @@ public class GiornoLista{
         return numeroGiorniMAx;
     }
 
-    public List<Persona> getListaDiPersona() {
-        return listaDiPersona;
+    public List<Tuple<Persona,Boolean>> getListaDiPersoneWithCar() {
+        return listaDiPersone;
+    }
+
+
+    public List<Persona> getListaDiPersone() {
+        List<Persona> lista = new ArrayList<>();
+        for (Tuple<Persona, Boolean> e : this.listaDiPersone){
+            lista.add(e.getPerson());
+        }
+        return lista;
+    }
+
+    public void setListaDiPersone(List<Tuple<Persona, Boolean>> listaDiPersone) {
+        this.listaDiPersone = listaDiPersone;
     }
 
     public boolean isFull(){
-        return numeroGiorniMAx<=listaDiPersona.size();
+        return numeroGiorniMAx<=listaDiPersone.size();
     }
     @Override
     public boolean equals(Object o){
@@ -42,5 +55,14 @@ public class GiornoLista{
             bool=this.name.equals(g.name);
         }
         return bool;
+    }
+
+    @Override
+    public String toString() {
+        return "GiornoLista{" +
+                "numeroGiorniMAx=" + numeroGiorniMAx +
+                ", name='" + name + '\'' +
+                ", listaDiPersona=" + listaDiPersone +
+                '}';
     }
 }
