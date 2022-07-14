@@ -4,36 +4,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Persona {
+public class Person {
     private String abbreviazione;
     private String nome;
-    private int numeroGiorni;
-    private List<Giorno> giorniAssenza;
+    private int numberOfDaysToDo;
+
+    private List<Giorno> daysOfAbsence;
     private String color;
     final String ANSI_RESET = "\u001B[0m";
-    double giorniMacchinaPizzeria = 0;
-    public Persona(int i, String m, String color, String nome) {
+
+    Means means;
+    public Person(int i, String m, String color, String nome, Means means) {
         this.nome = nome;
-        this.giorniAssenza=new ArrayList<>();
+        this.daysOfAbsence =new ArrayList<>();
         this.abbreviazione=m;
-        this.numeroGiorni=i;
+        this.numberOfDaysToDo =i;
         this.color=color;
+        this.means = means;
     }
 
-    public Persona(String m) {
+    public Person(String m) {
         this.abbreviazione=m;
     }
 
     public void addListaAssenze(List<Giorno> assenze) {
-        giorniAssenza.addAll(assenze);
+        daysOfAbsence.addAll(assenze);
     }
 
-    public List<Giorno> getGiorniAssenza() {
-        return giorniAssenza;
+    public List<Giorno> getDaysOfAbsence() {
+        return daysOfAbsence;
     }
 
-    public int getNumeroGiorni() {
-        return numeroGiorni;
+    public int getNumberOfDaysToDo() {
+        return numberOfDaysToDo;
     }
 
     public String getAbbreviazione() {
@@ -45,15 +48,15 @@ public class Persona {
         return color + abbreviazione + ANSI_RESET;
     }
 
-    public boolean isCorrect(){
-        int giorniAs=giorniAssenza.size();
-        boolean bool=giorniAs + getNumeroGiorni() <= 7;
-        if(!bool){
+    public boolean isExceed(){
+        int daysOfAbsence = this.daysOfAbsence.size();
+        boolean cond = daysOfAbsence + getNumberOfDaysToDo() <= 7;
+        if(!cond){
             System.out.println("Controlla: "+this.abbreviazione);
-            System.out.println("Giorni lavorativi:"+this.getNumeroGiorni());
-            System.out.println("Assenze inpostate:"+giorniAs);
+            System.out.println("Giorni lavorativi:"+this.getNumberOfDaysToDo());
+            System.out.println("Assenze inpostate:"+daysOfAbsence);
         }
-        return bool;
+        return cond;
 
     }
     public String getNome(){
@@ -64,7 +67,7 @@ public class Persona {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Persona persona = (Persona) o;
+        Person persona = (Person) o;
         return Objects.equals(abbreviazione, persona.abbreviazione);
     }
 

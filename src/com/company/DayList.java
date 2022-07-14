@@ -3,18 +3,18 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiornoLista{
+public class DayList {
 
-    private int numeroGiorniMAx;
+    private int numberOfSlots;
     private String name;
-    private List<Tuple<Persona, Boolean>> listaDiPersone;
+    private List<Tuple<Person, Boolean>> listaDiPersone;
 
-    public GiornoLista(String g,int n) {
+    public DayList(String g, int n) {
         listaDiPersone=new ArrayList<>();
         name=g;
-        numeroGiorniMAx=n;
+        numberOfSlots=n;
     }
-    public void addPersona(Persona p){
+    public void addPerson(Person p){
         listaDiPersone.add(new Tuple<>(p, false));
     }
 
@@ -22,36 +22,36 @@ public class GiornoLista{
         return name;
     }
 
-    public int getNumeroGiorniMAx() {
-        return numeroGiorniMAx;
+    public int getNumberOfSlots() {
+        return numberOfSlots;
     }
 
-    public List<Tuple<Persona,Boolean>> getListaDiPersoneWithCar() {
+    public List<Tuple<Person,Boolean>> getListOfPeopleWithCar() {
         return listaDiPersone;
     }
 
 
-    public List<Persona> getListaDiPersone() {
-        List<Persona> lista = new ArrayList<>();
-        for (Tuple<Persona, Boolean> e : this.listaDiPersone){
+    public List<Person> getListaDiPersone() {
+        List<Person> lista = new ArrayList<>();
+        for (Tuple<Person, Boolean> e : this.listaDiPersone){
             lista.add(e.getPerson());
         }
         return lista;
     }
 
-    public void setListaDiPersone(List<Tuple<Persona, Boolean>> listaDiPersone) {
+    public void setListaDiPersone(List<Tuple<Person, Boolean>> listaDiPersone) {
         this.listaDiPersone = listaDiPersone;
     }
 
     public boolean isFull(){
-        return numeroGiorniMAx<=listaDiPersone.size();
+        return getNumberOfSlots() <= listaDiPersone.size();
     }
     @Override
     public boolean equals(Object o){
-        GiornoLista g;
+        DayList g;
         boolean bool=false;
-        if(o instanceof GiornoLista){
-            g=(GiornoLista) o;
+        if(o instanceof DayList){
+            g=(DayList) o;
             bool=this.name.equals(g.name);
         }
         return bool;
@@ -60,7 +60,7 @@ public class GiornoLista{
     @Override
     public String toString() {
         return "GiornoLista{" +
-                "numeroGiorniMAx=" + numeroGiorniMAx +
+                "numeroGiorniMAx=" + getNumberOfSlots() +
                 ", name='" + name + '\'' +
                 ", listaDiPersona=" + listaDiPersone +
                 '}';

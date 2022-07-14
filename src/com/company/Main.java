@@ -1,7 +1,5 @@
 package com.company;
 
-import javax.crypto.spec.PSource;
-import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        List<Persona> listaPersona = new ArrayList<>();
+        List<Person> listaPersona = new ArrayList<>();
 
         final String ANSI_BLACK = "\u001B[30m";
         final String ANSI_RED = "\u001B[31m";
@@ -23,15 +21,15 @@ public class Main {
         final String idk = "\u001B[38m";
 
 
-        GiornoLista LunediLista=new GiornoLista("Lunedì",3);
-        GiornoLista MartedìLista=new GiornoLista("Martedì",2);
-        GiornoLista MercolediLista=new GiornoLista("Mercoledì",3);
-        GiornoLista GiovediLista=new GiornoLista("Giovedì",3);
-        GiornoLista VenerdiLista=new GiornoLista("Venerdì",4);
-        GiornoLista SabatoLista=new GiornoLista("Sabato",5);
-        GiornoLista DomenicaLista=new GiornoLista("Domenica",5);
+        DayList LunediLista=new DayList("Lunedì",3);
+        DayList MartedìLista=new DayList("Martedì",2);
+        DayList MercolediLista=new DayList("Mercoledì",3);
+        DayList GiovediLista=new DayList("Giovedì",3);
+        DayList VenerdiLista=new DayList("Venerdì",4);
+        DayList SabatoLista=new DayList("Sabato",5);
+        DayList DomenicaLista=new DayList("Domenica",5);
 
-        List<GiornoLista> listaGiorni=new ArrayList<>();
+        List<DayList> listaGiorni=new ArrayList<>();
         listaGiorni.add(LunediLista);
         listaGiorni.add(MartedìLista);
         listaGiorni.add(MercolediLista);
@@ -49,27 +47,26 @@ public class Main {
         Giorno domenica=Giorno.getDomenica();
 
 
-        Persona matteo = new Persona(1,"M",ANSI_RED, "Matteo Piccolo");
-        Persona matteoNicolo = new Persona(3,"M/N",ANSI_GREEN, "Matteo Grande");
-        Persona gigi = new Persona(4,"G",ANSI_YELLOW, "Gigi");
-        Persona enrico = new Persona(2,"E",ANSI_BLUE, "Enrico");
-        Persona lally = new Persona(4,"F",ANSI_PURPLE, "Filippo");
-        Persona pietro = new Persona(3,"D",ANSI_CYAN, "Pietro");
-        Persona pandi = new Persona(5,"P",ANSI_WHITE, "Pandolfo");
-        Persona omar = new Persona(3,"O",idk, "Omar");
+        Person matteo = new Person(3,"M",ANSI_RED, "Matteo Piccolo", Means.PIZZERIA_CAR);
+        Person matteoNicolo = new Person(3,"M/N",ANSI_GREEN, "Matteo Grande", Means.MOTOR_BIKE);
+        Person gigi = new Person(3,"G",ANSI_YELLOW, "Gigi", Means.OWN_CAR);
+        Person enrico = new Person(3,"E",ANSI_BLUE, "Enrico", Means.OWN_CAR);
+        Person lally = new Person(5,"F",ANSI_PURPLE, "Filippo", Means.OWN_CAR);
+        Person pietro = new Person(3,"D",ANSI_CYAN, "Pietro", Means.PIZZERIA_CAR);
+        Person pandi = new Person(3,"P",ANSI_WHITE, "Pandolfo", Means.OWN_CAR);
+        Person omar = new Person(2,"O",idk, "Omar", Means.OWN_CAR);
 
 
-        int maxDistance = 0;
+        int maxDistance = 1;
 
         List<Giorno> assenzeMatteo=new ArrayList<>();
         assenzeMatteo.add(lunedi);
-        assenzeMatteo.add(venerdi);
+        assenzeMatteo.add(sabato);
+        assenzeMatteo.add(domenica);
 
         //pietro -> enrico -> gigi -> lally -> (pandi me matteo)
 
         List<Giorno> assenzeNicolo=new ArrayList<>();
-        assenzeNicolo.add(sabato);
-        assenzeNicolo.add(giovedi);
 
 
         List<Giorno> assenzeGigi=new ArrayList<>();
@@ -78,23 +75,14 @@ public class Main {
 
 
         List<Giorno> assenzeEnrico=new ArrayList<>();
-        assenzeEnrico.add(domenica);
-        assenzeEnrico.add(lunedi);
 
 
         List<Giorno> assenzeLally=new ArrayList<>();
-        assenzeLally.add(martedi);
-        assenzeLally.add(domenica);
 
 
         List<Giorno> assenzePietro=new ArrayList<>();
-        assenzePietro.add(lunedi);
-        assenzePietro.add(venerdi);
-        assenzePietro.add(sabato);
 
         List<Giorno> assenzePandi=new ArrayList<>();
-        assenzePandi.add(lunedi);
-        assenzePandi.add(mercoledi);
 
 
         List<Giorno> assenzeOmar = new ArrayList<>();
@@ -124,8 +112,8 @@ public class Main {
         listaPersona.add(omar);
 
         int[] prova = new int[7];
-        for(Persona p : listaPersona){
-            for(Giorno g : p.getGiorniAssenza()){
+        for(Person p : listaPersona){
+            for(Giorno g : p.getDaysOfAbsence()){
                 if(g.getGiorno().toString().equals("Lunedì")){
                     prova[0] = prova[0] + 1;
                 }else if(g.getGiorno().toString().equals("Martedì")){
@@ -145,65 +133,65 @@ public class Main {
         }
 
         boolean cond = true;
-        if(prova[0] + LunediLista.getNumeroGiorniMAx() > listaPersona.size()){
+        if(prova[0] + LunediLista.getNumberOfSlots() > listaPersona.size()){
             cond = false;
             System.out.println("Controlla Lunedì");
             System.out.println("Lunedì hai inserito le assenze di " + prova[0] + " persone.");
-        }else if(prova[1] + MartedìLista.getNumeroGiorniMAx() > listaPersona.size()){
+        }else if(prova[1] + MartedìLista.getNumberOfSlots() > listaPersona.size()){
             cond = false;
             System.out.println("Controlla Martedì");
             System.out.println("Martedì hai inserito le assenze di " + prova[1] + " persone.");
-        }else if(prova[2] + MercolediLista.getNumeroGiorniMAx() > listaPersona.size()){
+        }else if(prova[2] + MercolediLista.getNumberOfSlots() > listaPersona.size()){
             cond = false;
             System.out.println("Controlla Mercoledì");
             System.out.println("Mercoledì hai inserito le assenze di " + prova[2] + " persone.");
-        }else if(prova[3] + GiovediLista.getNumeroGiorniMAx() > listaPersona.size()){
+        }else if(prova[3] + GiovediLista.getNumberOfSlots() > listaPersona.size()){
             cond = false;
             System.out.println("Controlla Giovedì");
             System.out.println("Giovedì hai inserito le assenze di " + prova[3] + " persone.");
-        }else if(prova[4] + VenerdiLista.getNumeroGiorniMAx() > listaPersona.size()){
+        }else if(prova[4] + VenerdiLista.getNumberOfSlots() > listaPersona.size()){
             cond = false;
             System.out.println("Controlla Venerdì");
             System.out.println("Venerdì hai inserito le assenze di " + prova[4] + " persone.");
-        }else if(prova[5] + SabatoLista.getNumeroGiorniMAx() >listaPersona.size()){
+        }else if(prova[5] + SabatoLista.getNumberOfSlots() >listaPersona.size()){
             cond = false;
             System.out.println("Controlla Sabato");
             System.out.println("Sabato hai inserito le assenze di " + prova[5] + " persone.");
-        }else if(prova[6] + DomenicaLista.getNumeroGiorniMAx() > listaPersona.size()){
+        }else if(prova[6] + DomenicaLista.getNumberOfSlots() > listaPersona.size()){
             cond = false;
             System.out.println("Controlla Domenica");
             System.out.println("Domenica hai inserito le assenze di " + prova[6] + " persone.");
         }
 
-        ArrayList<Persona> personeMacchinaPropria = new ArrayList<>();
+        ArrayList<Person> personeMacchinaPropria = new ArrayList<>();
         personeMacchinaPropria.add(pandi);
         personeMacchinaPropria.add(enrico);
         personeMacchinaPropria.add(gigi);
         personeMacchinaPropria.add(lally);
-        personeMacchinaPropria.add(omar);
+        //personeMacchinaPropria.add(omar);
 
-        ArrayList<Persona> personeMacchinaPizzeria = new ArrayList<>();
+        ArrayList<Person> personeMacchinaPizzeria = new ArrayList<>();
         personeMacchinaPizzeria.add(matteo);
         personeMacchinaPizzeria.add(pietro);
+        personeMacchinaPizzeria.add(omar);
 
-        ArrayList<Persona> personeMotorinoPizzeria = new ArrayList<>();
+
+        ArrayList<Person> personeMotorinoPizzeria = new ArrayList<>();
         personeMotorinoPizzeria.add(matteoNicolo);
 
-        ListaSettimana l=new ListaSettimana(listaPersona, personeMacchinaPropria, personeMacchinaPizzeria, personeMotorinoPizzeria, 2);
-
-        l.setMaxDistance(maxDistance);
+        WeeklyList l = new WeeklyList(listaPersona, listaGiorni, 2);
 
 
-        if(l.isCorrectOccorrenzePersone()){
-            l.add(listaGiorni);
+
+        if(l.checkIfExcheedFromInitialOptions()){
 
             int numeroPresenzeDaOccupare=0;
             int numeroDisponibilitaPersone=0;
-            for (GiornoLista g:listaGiorni){
-                numeroPresenzeDaOccupare+=g.getNumeroGiorniMAx();
+            for (DayList g:listaGiorni){
+                numeroPresenzeDaOccupare+=g.getNumberOfSlots();
             }
-            for (Persona p:listaPersona){
-                numeroDisponibilitaPersone+=p.getNumeroGiorni();
+            for (Person p:listaPersona){
+                numeroDisponibilitaPersone+=p.getNumberOfDaysToDo();
             }
 
             if(numeroDisponibilitaPersone>numeroPresenzeDaOccupare){
@@ -214,7 +202,7 @@ public class Main {
             else{
                 if(cond){
                     //l.calcolaLista();
-                    l.calcola();
+                    l.calculate();
                 }
             }
         }
