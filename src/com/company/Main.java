@@ -49,20 +49,27 @@ public class Main {
         Giorno domenica=Giorno.getDomenica();
 
 
-        Persona matteo = new Persona(3,"M",ANSI_RED, "Matteo Piccolo");
-        Persona matteoNicolo = new Persona(4,"M/N",ANSI_GREEN, "Matteo Grande");
+        Persona matteo = new Persona(1,"M",ANSI_RED, "Matteo Piccolo");
+        Persona matteoNicolo = new Persona(3,"M/N",ANSI_GREEN, "Matteo Grande");
         Persona gigi = new Persona(4,"G",ANSI_YELLOW, "Gigi");
-        Persona enrico = new Persona(4,"E",ANSI_BLUE, "Enrico");
-        Persona lally = new Persona(3,"F",ANSI_PURPLE, "Filippo");
+        Persona enrico = new Persona(2,"E",ANSI_BLUE, "Enrico");
+        Persona lally = new Persona(4,"F",ANSI_PURPLE, "Filippo");
         Persona pietro = new Persona(3,"D",ANSI_CYAN, "Pietro");
-        Persona pandi = new Persona(3,"P",ANSI_WHITE, "Pandolfo");
-        Persona omar = new Persona(1,"O",idk, "Omar");
+        Persona pandi = new Persona(5,"P",ANSI_WHITE, "Pandolfo");
+        Persona omar = new Persona(3,"O",idk, "Omar");
+
+
+        int maxDistance = 0;
 
         List<Giorno> assenzeMatteo=new ArrayList<>();
+        assenzeMatteo.add(lunedi);
+        assenzeMatteo.add(venerdi);
 
         //pietro -> enrico -> gigi -> lally -> (pandi me matteo)
 
         List<Giorno> assenzeNicolo=new ArrayList<>();
+        assenzeNicolo.add(sabato);
+        assenzeNicolo.add(giovedi);
 
 
         List<Giorno> assenzeGigi=new ArrayList<>();
@@ -71,14 +78,24 @@ public class Main {
 
 
         List<Giorno> assenzeEnrico=new ArrayList<>();
+        assenzeEnrico.add(domenica);
+        assenzeEnrico.add(lunedi);
 
 
         List<Giorno> assenzeLally=new ArrayList<>();
+        assenzeLally.add(martedi);
+        assenzeLally.add(domenica);
 
 
         List<Giorno> assenzePietro=new ArrayList<>();
+        assenzePietro.add(lunedi);
+        assenzePietro.add(venerdi);
+        assenzePietro.add(sabato);
 
         List<Giorno> assenzePandi=new ArrayList<>();
+        assenzePandi.add(lunedi);
+        assenzePandi.add(mercoledi);
+
 
         List<Giorno> assenzeOmar = new ArrayList<>();
 
@@ -173,6 +190,8 @@ public class Main {
         personeMotorinoPizzeria.add(matteoNicolo);
 
         ListaSettimana l=new ListaSettimana(listaPersona, personeMacchinaPropria, personeMacchinaPizzeria, personeMotorinoPizzeria, 2);
+
+        l.setMaxDistance(maxDistance);
 
 
         if(l.isCorrectOccorrenzePersone()){

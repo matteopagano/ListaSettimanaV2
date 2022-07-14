@@ -16,6 +16,7 @@ public class ListaSettimana {
     private List<Persona> listaPersone;
     private List<GiornoLista> listaGiorni;
     private MacchinePizzeria macchine;
+    private int maxDistance;
 
     public ListaSettimana(List<Persona> listaPersona, List<Persona> personeMacchinaPropria, List<Persona> personeMacchinaPizzeria, List<Persona> personeMotorinoPizzeria, int numeroMacchineDisponibiliPizzeria) {
         this.listaPersone=listaPersona;
@@ -101,6 +102,7 @@ public class ListaSettimana {
         while(i<1100000 && cond1){
             if(calcolaAux()){
                 cond1 = false;
+                //System.out.println("volte: " + i);
             }
             i++;
         }
@@ -133,20 +135,29 @@ public class ListaSettimana {
         }
         if(!isCorrectLista()){
             return false;
-
         }else {
             System.out.println();
             //System.out.println("CORRETTA");
             //stampaLista();
             //System.out.println();
             //System.out.println("Modifiche macchine...");
-            System.out.println();
             this.macchine.setCar(this);
-            stampaLista();
+            if(macchine.maxDistance(maxDistance)){
+                System.out.println("Distanza Corretta");
 
-            //stampaListaV2();
+                System.out.println(macchine.getNumeroVoltePropria());
+                System.out.println();
+                stampaLista();
+                stampaListaV2();
+                return true;
+            }else{
+                clearGiorni();
+                return false;
+            }
+
+            //
             //upGrade();
-            return true;
+
         }
     }
 
@@ -376,7 +387,62 @@ public class ListaSettimana {
                     }
                 }
             }
-            objs = new Object[]{nome,lunedi,martedi,mercoledi,giovedi,venerdi,sabato,domenica,""};
+            String totale = "";
+
+            int macchinaPiz = 0;
+            int macchinaPropria = 0;
+
+            if(lunedi.equals("X")){
+                macchinaPiz ++;
+            }else if(lunedi.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+            if(martedi.equals("X")){
+                macchinaPiz ++;
+            }else if(martedi.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+            if(mercoledi.equals("X")){
+                macchinaPiz ++;
+            }else if(mercoledi.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+            if(giovedi.equals("X")){
+                macchinaPiz ++;
+            }else if(giovedi.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+            if(venerdi.equals("X")){
+                macchinaPiz ++;
+            }else if(venerdi.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+            if(sabato.equals("X")){
+                macchinaPiz ++;
+            }else if(sabato.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+            if(domenica.equals("X")){
+                macchinaPiz ++;
+            }else if(domenica.equals("\u24CD")){
+                macchinaPropria ++;
+            }
+
+
+            if(macchinaPiz == 0 && macchinaPropria == 0){
+                totale = 0 + "";
+            }else if(macchinaPiz != 0 && macchinaPropria == 0){
+
+                    totale = macchinaPiz + "";
+            }else if(macchinaPiz == 0){
+                    totale = macchinaPropria + "Macchina";
+            }else {
+                    totale = macchinaPiz + " + " + macchinaPropria + " Macchina";
+            }
+
+
+
+            objs = new Object[]{nome,lunedi,martedi,mercoledi,giovedi,venerdi,sabato,domenica,totale};
             tableModel.addRow(objs);
 
         }
@@ -498,5 +564,8 @@ public class ListaSettimana {
         return listaGiorni;
     }
 
+    public void setMaxDistance(int i){
+        this.maxDistance = i;
+    }
 
 }

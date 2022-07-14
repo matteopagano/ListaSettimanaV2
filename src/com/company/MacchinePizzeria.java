@@ -4,12 +4,11 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MacchinePizzeria {
 
 
-    private Dictionary<String, Integer> numeroVoltePropria;
+    private Map<String, Integer> numeroVoltePropria;
     private List<Persona> personeMacchinePropria;
     private List<Persona> personeMacchinePizzeria;
     private List<Persona> personeMotorinoPizzeria;
@@ -17,13 +16,11 @@ public class MacchinePizzeria {
 
     public MacchinePizzeria(List<Persona> macchineProprie, List<Persona> macchinePizzeria, List<Persona> motorinoPizzeria, int numeroMacchinePizzeria){
         this.numeroMacchinePizzeria = numeroMacchinePizzeria;
-        this.numeroVoltePropria = new Hashtable<>();
+        this.numeroVoltePropria = new HashMap<>();
         for(Persona e : macchineProprie){
             this.numeroVoltePropria.put(e.getAbbreviazione(), 0);
         }
-        for(Persona e : macchinePizzeria){
-            this.numeroVoltePropria.put(e.getAbbreviazione(), 0);
-        }
+
         //System.out.println(this.numeroVoltePropria);
 
         this.personeMacchinePropria = macchineProprie;
@@ -41,7 +38,7 @@ public class MacchinePizzeria {
 
     private Persona takeMin(List<Tuple<Persona,Boolean>> l){
         //System.out.println(numeroVoltePropria);
-        System.out.println(numeroVoltePropria);
+        //System.out.println(numeroVoltePropria);
         Tuple<Persona, Integer> min = new Tuple<>(l.get(0).getPerson(),numeroVoltePropria.get(l.get(0).getPerson().getAbbreviazione()));
         for(Tuple<Persona,Boolean> e : l){
             int numeroVolteE = numeroVoltePropria.get(e.getPerson().getAbbreviazione());
@@ -49,7 +46,7 @@ public class MacchinePizzeria {
                 min = new Tuple<Persona,Integer>(e.getPerson(),numeroVolteE);
             }
         }
-        System.out.println("Ho preso il minore con: " + min.getPerson() + ", con volte: " +min.getUsaMacchinaPropria());
+        //System.out.println("Ho preso il minore con: " + min.getPerson() + ", con volte: " +min.getUsaMacchinaPropria());
         return min.getPerson();
     }
 
@@ -235,11 +232,40 @@ public class MacchinePizzeria {
             }
 
         }
-        System.out.println(numeroVoltePropria);
 
     }
 
-    public int getNumeroMacchinePizzeria() {
+    private int getNumeroMacchinePizzeria() {
         return numeroMacchinePizzeria;
+    }
+
+    private int minAux(){
+        return Collections.min(numeroVoltePropria.values());
+    }
+    private int maxAux(){
+        return Collections.max(numeroVoltePropria.values());
+    }
+    public boolean maxDistance(int i){
+        boolean bool = maxAux() - minAux() <= i;
+        if(bool){
+            return true;
+        }else{
+            reset();
+            return false;
+        }
+    }
+
+    private void reset() {
+        for(Map.Entry<String, Integer> e : numeroVoltePropria.entrySet()){
+            e.setValue(0);
+        }
+    }
+
+    public Integer getValueFromPerson(String p){
+        return numeroVoltePropria.get(p);
+    }
+
+    public Map<String, Integer> getNumeroVoltePropria() {
+        return numeroVoltePropria;
     }
 }
