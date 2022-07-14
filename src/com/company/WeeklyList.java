@@ -66,7 +66,7 @@ public class WeeklyList {
                 System.out.println("Distanza Corretta");
                 System.out.println(carBuilder.getNumeroVoltePropria());
                 printList();
-                //sendToPrinter();
+                sendToPrinter();
                 return true;
             }else{
                 clearDays();
@@ -91,76 +91,6 @@ public class WeeklyList {
 
     public void sendToPrinter() throws PrinterException {
         Printer.sendToPrinter(this);
-    }
-
-    private boolean isListCorrect() {
-        return doSlotsAndPeopleMatch() && doDaysMatchFromInitialOptions();
-    }
-
-    private boolean doSlotsAndPeopleMatch(){
-        boolean bool = true;
-        for (DayList g : listOfDays){
-            if(g.getListOfPeopleWithCar().size() != g.getNumberOfSlots()){
-                bool = false;
-            }
-        }
-        return bool;
-    }
-
-    public boolean isAlreadyPresent(Person personToAdd, DayList g) {
-        boolean cond = false;
-        for(Tuple<Person,Boolean> g1 : g.getListOfPeopleWithCar()){
-            if (g1.getPerson().getAbbreviazione().equals(personToAdd.getAbbreviazione())) {
-                cond = true;
-                break;
-            }
-        }
-        return cond;
-    }
-
-    public boolean isAddable(Person personToAdd, DayList d) {
-        boolean cond = true;
-        String s = d.getName();
-        for(Day g : personToAdd.getDaysOfAbsence()){
-            if (g.getDay().equals(s)) {
-                cond = false;
-                break;
-            }
-        }
-        return cond;
-    }
-
-    public boolean checkIfExcheedFromInitialOptions(){
-        boolean cond = true;
-        for(Person p : listOfPeople){
-            if(!p.isExceed()){
-                cond = false;
-                break;
-            }
-        }
-        return cond;
-    }
-
-    private boolean doDaysMatchFromInitialOptions(){
-        boolean check = true;
-        for(Person p : listOfPeople){
-            int giorniAssegnati = 0;
-            for(DayList g : listOfDays){
-                if(g.getListaDiPersone().contains(p)){
-                    giorniAssegnati ++;
-                }
-            }
-            if(p.getNumberOfDaysToDo() != giorniAssegnati) check = false;
-        }
-        return check;
-    }
-
-    public List<Person> getListOfPeople() {
-        return listOfPeople;
-    }
-
-    public List<DayList> getListOfDays() {
-        return listOfDays;
     }
 
     public boolean isCorrectAbsence(){
@@ -242,4 +172,76 @@ public class WeeklyList {
         }
         return cond;
     }
+
+    private boolean isListCorrect() {
+        return doSlotsAndPeopleMatch() && doDaysMatchFromInitialOptions();
+    }
+
+    public boolean isAlreadyPresent(Person personToAdd, DayList g) {
+        boolean cond = false;
+        for(Tuple<Person,Boolean> g1 : g.getListOfPeopleWithCar()){
+            if (g1.getPerson().getAbbreviazione().equals(personToAdd.getAbbreviazione())) {
+                cond = true;
+                break;
+            }
+        }
+        return cond;
+    }
+
+    public boolean isAddable(Person personToAdd, DayList d) {
+        boolean cond = true;
+        String s = d.getName();
+        for(Day g : personToAdd.getDaysOfAbsence()){
+            if (g.getDay().equals(s)) {
+                cond = false;
+                break;
+            }
+        }
+        return cond;
+    }
+
+    private boolean doSlotsAndPeopleMatch(){
+        boolean bool = true;
+        for (DayList g : listOfDays){
+            if(g.getListOfPeopleWithCar().size() != g.getNumberOfSlots()){
+                bool = false;
+            }
+        }
+        return bool;
+    }
+
+    private boolean doDaysMatchFromInitialOptions(){
+        boolean check = true;
+        for(Person p : listOfPeople){
+            int giorniAssegnati = 0;
+            for(DayList g : listOfDays){
+                if(g.getListaDiPersone().contains(p)){
+                    giorniAssegnati ++;
+                }
+            }
+            if(p.getNumberOfDaysToDo() != giorniAssegnati) check = false;
+        }
+        return check;
+    }
+
+    public boolean checkIfExcheedFromInitialOptions(){
+        boolean cond = true;
+        for(Person p : listOfPeople){
+            if(!p.isExceed()){
+                cond = false;
+                break;
+            }
+        }
+        return cond;
+    }
+
+    public List<Person> getListOfPeople() {
+        return listOfPeople;
+    }
+
+    public List<DayList> getListOfDays() {
+        return listOfDays;
+    }
+
+
 }

@@ -10,7 +10,6 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -118,7 +117,7 @@ public class Printer implements Printable {
         }
 
         for (Person p : weeklyList.getListOfPeople()){
-            String nome = p.getNome();
+            String nome = p.getName();
             String lunedi = " ";
             String martedi= " ";
             String mercoledi= " ";

@@ -6,25 +6,25 @@ import java.util.Objects;
 
 public class Person {
     private String abbreviazione;
-    private String nome;
+    private String name;
     private int numberOfDaysToDo;
-
     private List<Day> daysOfAbsence;
+
     private String color;
     final String ANSI_RESET = "\u001B[0m";
 
     Means means;
     public Person(int i, String m, String color, String nome, Means means) {
-        this.nome = nome;
-        this.daysOfAbsence =new ArrayList<>();
-        this.abbreviazione=m;
-        this.numberOfDaysToDo =i;
-        this.color=color;
+        this.name = nome;
+        this.daysOfAbsence = new ArrayList<>();
+        this.abbreviazione = m;
+        this.numberOfDaysToDo = i;
+        this.color = color;
         this.means = means;
     }
 
     public Person(String m) {
-        this.abbreviazione=m;
+        this.abbreviazione = m;
     }
 
     public void addListaAssenze(List<Day> assenze) {
@@ -59,8 +59,8 @@ public class Person {
         return cond;
 
     }
-    public String getNome(){
-        return nome;
+    public String getName(){
+        return name;
     }
 
     @Override
