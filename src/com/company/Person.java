@@ -9,7 +9,7 @@ public class Person {
     private String nome;
     private int numberOfDaysToDo;
 
-    private List<Giorno> daysOfAbsence;
+    private List<Day> daysOfAbsence;
     private String color;
     final String ANSI_RESET = "\u001B[0m";
 
@@ -27,11 +27,11 @@ public class Person {
         this.abbreviazione=m;
     }
 
-    public void addListaAssenze(List<Giorno> assenze) {
+    public void addListaAssenze(List<Day> assenze) {
         daysOfAbsence.addAll(assenze);
     }
 
-    public List<Giorno> getDaysOfAbsence() {
+    public List<Day> getDaysOfAbsence() {
         return daysOfAbsence;
     }
 
