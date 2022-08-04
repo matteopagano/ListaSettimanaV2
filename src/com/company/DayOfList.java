@@ -34,7 +34,7 @@ public class DayOfList {
     public List<Person> getListOfPeople() {
         List<Person> lista = new ArrayList<>();
         for (Tuple<Person, Boolean> e : this.listOfPeople){
-            lista.add(e.getPerson());
+            lista.add(e.getT1());
         }
         return lista;
     }

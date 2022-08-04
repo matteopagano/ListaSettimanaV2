@@ -8,41 +8,41 @@ import java.util.stream.Collectors;
 public class CarBuilder {
 
     private final CarBuilderProperty carBuilderProperty;
-    private final Map<String, Integer> numeroVoltePropria;
+    private final Map<String, Integer> person_NumberOfTimesOwnCar;
 
     public CarBuilder(CarBuilderProperty propertyCar) {
         this.carBuilderProperty = propertyCar;
-        this.numeroVoltePropria = new HashMap<>();
+        this.person_NumberOfTimesOwnCar = new HashMap<>();
         for(Person e : carBuilderProperty.getPeopleOwnCar()){
-            this.numeroVoltePropria.put(e.getAbbreviation(), 0);
+            this.person_NumberOfTimesOwnCar.put(e.getAbbreviation(), 0);
         }
 
     }
 
     private Person takeMin(List<Tuple<Person,Boolean>> l){
-        Tuple<Person, Integer> min = new Tuple<>(l.get(0).getPerson(),numeroVoltePropria.get(l.get(0).getPerson().getAbbreviation()));
+        Tuple<Person, Integer> min = new Tuple<>(l.get(0).getT1(), person_NumberOfTimesOwnCar.get(l.get(0).getT1().getAbbreviation()));
         for(Tuple<Person,Boolean> e : l){
-            int numeroVolteE = numeroVoltePropria.get(e.getPerson().getAbbreviation());
-            if(numeroVolteE <= min.getUsaMacchinaPropria()){
-                min = new Tuple<>(e.getPerson(), numeroVolteE);
+            int numeroVolteE = person_NumberOfTimesOwnCar.get(e.getT1().getAbbreviation());
+            if(numeroVolteE <= min.getT2()){
+                min = new Tuple<>(e.getT1(), numeroVolteE);
             }
         }
-        return min.getPerson();
+        return min.getT1();
     }
 
     public void makeListWithCarsOptions(WeeklyList listaSettimana) {
         for(DayOfList g : listaSettimana.getListOfDays()){
             //System.out.println(g.getName()+": "+ g.getListaDiPersone());
             if(g.getListOfPeople().containsAll(this.carBuilderProperty.getPeoplePizzeriaCar()) && this.carBuilderProperty.getPeoplePizzeriaCar().size() == getNumeroMacchinePizzeria()){
-                ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation()))).collect(Collectors.toCollection(ArrayList::new));
+                ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getT1().getAbbreviation()))).collect(Collectors.toCollection(ArrayList::new));
 
-                l.replaceAll(personaBooleanTuple -> new Tuple<>(personaBooleanTuple.getPerson(),true));
+                l.replaceAll(personaBooleanTuple -> new Tuple<>(personaBooleanTuple.getT1(),true));
 
                 g.getListOfPeopleWithCar().replaceAll(personaBooleanTuple -> {
                     Tuple<Person, Boolean> modified = personaBooleanTuple;
                     if(l.contains(personaBooleanTuple)){
 
-                        modified.setUsaMacchinaPropria(true);
+                        modified.setT2(true);
                         //numeroVoltePropria.put(personaBooleanTuple.getPerson().getAbbreviazione(),numeroVoltePropria.get(personaBooleanTuple.getPerson().getAbbreviazione())+1);
                         return modified;
                     }else{
@@ -84,7 +84,7 @@ public class CarBuilder {
                     @Override
                     public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
 
-                        return carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation()));
+                        return carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getT1().getAbbreviation()));
                     }
                 }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -110,7 +110,7 @@ public class CarBuilder {
                     for(int i = 0; i < formula; i++){
                         if(l.size()!=0){
                             Person min = takeMin(l);
-                            numeroVoltePropria.put(min.getAbbreviation(), numeroVoltePropria.get(min.getAbbreviation()) + 1);
+                            person_NumberOfTimesOwnCar.put(min.getAbbreviation(), person_NumberOfTimesOwnCar.get(min.getAbbreviation()) + 1);
                             personeDaLasciareLaFlagFalse.add(new Tuple<>(min,true));
                             l.remove(new Tuple<>(min,true));
                         }
@@ -129,10 +129,10 @@ public class CarBuilder {
                     public Tuple<Person, Boolean> apply(Tuple<Person, Boolean> personaBooleanTuple) {
                         Tuple<Person, Boolean> modified = personaBooleanTuple;
                         //System.out.println("persone da lasciare con la flag false: "+ personeDaLasciareLaFlagFalse);
-                        if(!(personeDaLasciareLaFlagFalse.contains(personaBooleanTuple) || (carBuilderProperty.getPeopleMotorbike().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation())))
-                                || carBuilderProperty.getPeoplePizzeriaCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation())))){
+                        if(!(personeDaLasciareLaFlagFalse.contains(personaBooleanTuple) || (carBuilderProperty.getPeopleMotorbike().contains(new Person(personaBooleanTuple.getT1().getAbbreviation())))
+                                || carBuilderProperty.getPeoplePizzeriaCar().contains(new Person(personaBooleanTuple.getT1().getAbbreviation())))){
 
-                            modified.setUsaMacchinaPropria(true);
+                            modified.setT2(true);
                             return modified;
                         }else{
                             return personaBooleanTuple;
@@ -150,10 +150,10 @@ public class CarBuilder {
     }
 
     private int minAux(){
-        return Collections.min(numeroVoltePropria.values());
+        return Collections.min(person_NumberOfTimesOwnCar.values());
     }
     private int maxAux(){
-        return Collections.max(numeroVoltePropria.values());
+        return Collections.max(person_NumberOfTimesOwnCar.values());
     }
     public boolean isFair(int i){
         boolean bool = maxAux() - minAux() <= i;
@@ -166,17 +166,17 @@ public class CarBuilder {
     }
 
     private void reset() {
-        for(Map.Entry<String, Integer> e : numeroVoltePropria.entrySet()){
+        for(Map.Entry<String, Integer> e : person_NumberOfTimesOwnCar.entrySet()){
             e.setValue(0);
         }
     }
 
     public Integer getValueFromPerson(String p){
-        return numeroVoltePropria.get(p);
+        return person_NumberOfTimesOwnCar.get(p);
     }
 
-    public Map<String, Integer> getNumeroVoltePropria() {
-        return numeroVoltePropria;
+    public Map<String, Integer> getPerson_NumberOfTimesOwnCar() {
+        return person_NumberOfTimesOwnCar;
     }
 
     public static CarBuilderProperty createPropertyCar(List<Person> listOfPeople, int numberOfPizzeriaCar){

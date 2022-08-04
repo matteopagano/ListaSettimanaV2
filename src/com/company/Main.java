@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        List<Person> listaPersona = new ArrayList<>();
+        List<Person> listOfPeople = new ArrayList<>();
 
         final String ANSI_BLACK = "\u001B[30m";
         final String ANSI_RED = "\u001B[31m";
@@ -95,16 +95,16 @@ public class Main {
         matteo.addAbsences(assenzeMatteo);
         omar.addAbsences(assenzeOmar);
 
-        listaPersona.add(matteo);
-        listaPersona.add(matteoNicolo);
-        listaPersona.add(gigi);
-        listaPersona.add(enrico);
-        listaPersona.add(lally);
-        listaPersona.add(pietro);
-        listaPersona.add(pandi);
-        listaPersona.add(omar);
+        listOfPeople.add(matteo);
+        listOfPeople.add(matteoNicolo);
+        listOfPeople.add(gigi);
+        listOfPeople.add(enrico);
+        listOfPeople.add(lally);
+        listOfPeople.add(pietro);
+        listOfPeople.add(pandi);
+        listOfPeople.add(omar);
 
-        WeeklyList weeklyList = new WeeklyList(listaPersona, listaGiorni, 2);
+        WeeklyList weeklyList = new WeeklyList(listOfPeople, listaGiorni, 2);
 
         weeklyList.calculate();
 

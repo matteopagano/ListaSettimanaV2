@@ -64,7 +64,7 @@ public class WeeklyList {
             this.carBuilder.makeListWithCarsOptions(this);
             if(carBuilder.isFair(1)){
                 System.out.println("Distanza Corretta");
-                System.out.println(carBuilder.getNumeroVoltePropria());
+                System.out.println(carBuilder.getPerson_NumberOfTimesOwnCar());
                 printList();
                 sendToPrinter();
                 return true;
@@ -181,7 +181,7 @@ public class WeeklyList {
     public boolean isAlreadyPresent(Person personToAdd, DayOfList g) {
         boolean cond = false;
         for(Tuple<Person,Boolean> g1 : g.getListOfPeopleWithCar()){
-            if (g1.getPerson().getAbbreviation().equals(personToAdd.getAbbreviation())) {
+            if (g1.getT1().getAbbreviation().equals(personToAdd.getAbbreviation())) {
                 cond = true;
                 break;
             }

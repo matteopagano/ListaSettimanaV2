@@ -138,7 +138,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             lunedi = "\u24CD";
                         }else{
                             lunedi = "X";
@@ -155,7 +155,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             martedi = "\u24CD";
                         }else{
                             martedi = "X";
@@ -170,7 +170,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             mercoledi = "\u24CD";
                         }else{
                             mercoledi = "X";
@@ -185,7 +185,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             giovedi = "\u24CD";
                         }else{
                             giovedi = "X";
@@ -200,7 +200,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             venerdi = "\u24CD";
                         }else{
                             venerdi = "X";
@@ -215,7 +215,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             sabato = "\u24CD";
                         }else{
                             sabato = "X";
@@ -230,7 +230,7 @@ public class Printer implements Printable {
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
-                        if(l.get(0).getUsaMacchinaPropria()){
+                        if(l.get(0).getT2()){
                             domenica = "\u24CD";
                         }else{
                             domenica = "X";
