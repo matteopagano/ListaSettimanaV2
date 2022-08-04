@@ -21,17 +21,17 @@ public class Main {
         final String idk = "\u001B[38m";
 
 
-        DayList LunediLista = new DayList("Lunedì", 3);
-        DayList MartedìLista = new DayList("Martedì", 2);
-        DayList MercolediLista = new DayList("Mercoledì", 3);
-        DayList GiovediLista = new DayList("Giovedì", 3);
-        DayList VenerdiLista = new DayList("Venerdì", 4);
-        DayList SabatoLista = new DayList("Sabato", 5);
-        DayList DomenicaLista = new DayList("Domenica", 5);
+        DayOfList LunediLista = new DayOfList("Lunedì", 0);
+        DayOfList MartediLista = new DayOfList("Martedì", 0);
+        DayOfList MercolediLista = new DayOfList("Mercoledì", 3);
+        DayOfList GiovediLista = new DayOfList("Giovedì", 3);
+        DayOfList VenerdiLista = new DayOfList("Venerdì", 4);
+        DayOfList SabatoLista = new DayOfList("Sabato", 2);
+        DayOfList DomenicaLista = new DayOfList("Domenica", 3);
 
-        List<DayList> listaGiorni = new ArrayList<>();
+        List<DayOfList> listaGiorni = new ArrayList<>();
         listaGiorni.add(LunediLista);
-        listaGiorni.add(MartedìLista);
+        listaGiorni.add(MartediLista);
         listaGiorni.add(MercolediLista);
         listaGiorni.add(GiovediLista);
         listaGiorni.add(VenerdiLista);
@@ -47,46 +47,53 @@ public class Main {
         Day domenica = Day.getDomenica();
 
         Person matteo = new Person(3, "M", ANSI_RED, "Matteo Piccolo", Means.PIZZERIA_CAR);
-        Person matteoNicolo = new Person(4, "M/N", ANSI_GREEN, "Matteo Grande", Means.MOTOR_BIKE);
-        Person gigi = new Person(3, "G", ANSI_YELLOW, "Gigi", Means.OWN_CAR);
-        Person enrico = new Person(3, "E", ANSI_BLUE, "Enrico", Means.OWN_CAR);
-        Person lally = new Person(5, "F", ANSI_PURPLE, "Filippo", Means.OWN_CAR);
-        Person pietro = new Person(3, "D", ANSI_CYAN, "Pietro", Means.PIZZERIA_CAR);
+        Person matteoNicolo = new Person(2, "M/N", ANSI_GREEN, "Matteo Grande", Means.MOTOR_BIKE);
+        Person gigi = new Person(2, "G", ANSI_YELLOW, "Gigi", Means.OWN_CAR);
+        Person enrico = new Person(2, "E", ANSI_BLUE, "Enrico", Means.OWN_CAR);
+        Person lally = new Person(2, "F", ANSI_PURPLE, "Filippo", Means.OWN_CAR);
+        Person pietro = new Person(0, "D", ANSI_CYAN, "Pietro", Means.PIZZERIA_CAR);
         Person pandi = new Person(2, "P", ANSI_WHITE, "Pandolfo", Means.OWN_CAR);
         Person omar = new Person(2, "O", idk, "Omar", Means.OWN_CAR);
 
         //pietro -> enrico -> gigi -> lally -> (pandi me matteo)
 
         List<Day> assenzeMatteo = new ArrayList<>();
+        assenzeMatteo.add(mercoledi);
+        assenzeMatteo.add(giovedi);
 
         List<Day> assenzeNicolo = new ArrayList<>();
         assenzeNicolo.add(sabato);
 
         List<Day> assenzeGigi = new ArrayList<>();
+        assenzeGigi.add(venerdi);
         assenzeGigi.add(sabato);
+        assenzeGigi.add(domenica);
 
         List<Day> assenzeEnrico = new ArrayList<>();
-        assenzeEnrico.add(lunedi);
-        assenzeEnrico.add(martedi);
-        assenzeEnrico.add(mercoledi);
+        assenzeEnrico.add(venerdi);
         assenzeEnrico.add(sabato);
+        assenzeEnrico.add(domenica);
 
         List<Day> assenzeLally = new ArrayList<>();
 
         List<Day> assenzePietro = new ArrayList<>();
 
         List<Day> assenzePandi = new ArrayList<>();
+        assenzePandi.add(sabato);
+        assenzePandi.add(domenica);
 
         List<Day> assenzeOmar = new ArrayList<>();
+        assenzeOmar.add(sabato);
+        assenzeOmar.add(domenica);
 
-        pandi.addListaAssenze(assenzePandi);
-        pietro.addListaAssenze(assenzePietro);
-        lally.addListaAssenze(assenzeLally);
-        enrico.addListaAssenze(assenzeEnrico);
-        gigi.addListaAssenze(assenzeGigi);
-        matteoNicolo.addListaAssenze(assenzeNicolo);
-        matteo.addListaAssenze(assenzeMatteo);
-        omar.addListaAssenze(assenzeOmar);
+        pandi.addAbsences(assenzePandi);
+        pietro.addAbsences(assenzePietro);
+        lally.addAbsences(assenzeLally);
+        enrico.addAbsences(assenzeEnrico);
+        gigi.addAbsences(assenzeGigi);
+        matteoNicolo.addAbsences(assenzeNicolo);
+        matteo.addAbsences(assenzeMatteo);
+        omar.addAbsences(assenzeOmar);
 
         listaPersona.add(matteo);
         listaPersona.add(matteoNicolo);
@@ -100,6 +107,7 @@ public class Main {
         WeeklyList weeklyList = new WeeklyList(listaPersona, listaGiorni, 2);
 
         weeklyList.calculate();
+
 
 
     }

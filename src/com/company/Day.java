@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Objects;
+
 public class Day {
     private String day;
 
@@ -32,10 +34,37 @@ public class Day {
         return day;
     }
 
+    public static Day getDayByName(String name){
+        Day d = null;
+        switch (name) {
+            case "Lunedì" -> d = getLunedi();
+            case "Martedì" -> d = getMartedi();
+            case "Mercoledì" -> d = getMercoledi();
+            case "Giovedì" -> d = getGiovedi();
+            case "Venerdì" -> d = getVenerdi();
+            case "Sabato" -> d = getSabato();
+            case "Domenica" -> d = getDomenica();
+        }
+        return d;
+    }
+
     @Override
     public String toString() {
         return "Giorno{" +
                 "giorno='" + day + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Day day1 = (Day) o;
+        return Objects.equals(day, day1.day);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(day);
     }
 }

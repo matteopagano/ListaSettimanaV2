@@ -14,57 +14,39 @@ public class CarBuilder {
         this.carBuilderProperty = propertyCar;
         this.numeroVoltePropria = new HashMap<>();
         for(Person e : carBuilderProperty.getPeopleOwnCar()){
-            this.numeroVoltePropria.put(e.getAbbreviazione(), 0);
+            this.numeroVoltePropria.put(e.getAbbreviation(), 0);
         }
 
     }
 
     private Person takeMin(List<Tuple<Person,Boolean>> l){
-        Tuple<Person, Integer> min = new Tuple<>(l.get(0).getPerson(),numeroVoltePropria.get(l.get(0).getPerson().getAbbreviazione()));
+        Tuple<Person, Integer> min = new Tuple<>(l.get(0).getPerson(),numeroVoltePropria.get(l.get(0).getPerson().getAbbreviation()));
         for(Tuple<Person,Boolean> e : l){
-            int numeroVolteE = numeroVoltePropria.get(e.getPerson().getAbbreviazione());
+            int numeroVolteE = numeroVoltePropria.get(e.getPerson().getAbbreviation());
             if(numeroVolteE <= min.getUsaMacchinaPropria()){
-                min = new Tuple<Person,Integer>(e.getPerson(),numeroVolteE);
+                min = new Tuple<>(e.getPerson(), numeroVolteE);
             }
         }
         return min.getPerson();
     }
 
-    public long countStream(List<Tuple<Person,Boolean>> l, Predicate<Tuple<Person, Boolean>> p){
-        return l.stream().filter(p).count();
-    }
-
     public void makeListWithCarsOptions(WeeklyList listaSettimana) {
-        for(DayList g : listaSettimana.getListOfDays()){
+        for(DayOfList g : listaSettimana.getListOfDays()){
             //System.out.println(g.getName()+": "+ g.getListaDiPersone());
-            if(g.getListaDiPersone().containsAll(this.carBuilderProperty.getPeoplePizzeriaCar()) && this.carBuilderProperty.getPeoplePizzeriaCar().size() == getNumeroMacchinePizzeria()){
-                ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
-                    @Override
-                    public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
+            if(g.getListOfPeople().containsAll(this.carBuilderProperty.getPeoplePizzeriaCar()) && this.carBuilderProperty.getPeoplePizzeriaCar().size() == getNumeroMacchinePizzeria()){
+                ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation()))).collect(Collectors.toCollection(ArrayList::new));
 
-                        return carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviazione()));
-                    }
-                }).collect(Collectors.toCollection(ArrayList::new));
+                l.replaceAll(personaBooleanTuple -> new Tuple<>(personaBooleanTuple.getPerson(),true));
 
-                l.replaceAll(new UnaryOperator<Tuple<Person, Boolean>>() {
-                    @Override
-                    public Tuple<Person, Boolean> apply(Tuple<Person, Boolean> personaBooleanTuple) {
-                        return new Tuple<>(personaBooleanTuple.getPerson(),true);
-                    }
-                });
+                g.getListOfPeopleWithCar().replaceAll(personaBooleanTuple -> {
+                    Tuple<Person, Boolean> modified = personaBooleanTuple;
+                    if(l.contains(personaBooleanTuple)){
 
-                g.getListOfPeopleWithCar().replaceAll(new UnaryOperator<Tuple<Person, Boolean>>() {
-                    @Override
-                    public Tuple<Person, Boolean> apply(Tuple<Person, Boolean> personaBooleanTuple) {
-                        Tuple<Person, Boolean> modified = personaBooleanTuple;
-                        if(l.contains(personaBooleanTuple)){
-
-                            modified.setUsaMacchinaPropria(true);
-                            //numeroVoltePropria.put(personaBooleanTuple.getPerson().getAbbreviazione(),numeroVoltePropria.get(personaBooleanTuple.getPerson().getAbbreviazione())+1);
-                            return modified;
-                        }else{
-                            return personaBooleanTuple;
-                        }
+                        modified.setUsaMacchinaPropria(true);
+                        //numeroVoltePropria.put(personaBooleanTuple.getPerson().getAbbreviazione(),numeroVoltePropria.get(personaBooleanTuple.getPerson().getAbbreviazione())+1);
+                        return modified;
+                    }else{
+                        return personaBooleanTuple;
                     }
                 });
 
@@ -75,23 +57,23 @@ public class CarBuilder {
             else{
 
 
-                long nPSenzaMotorino = g.getListaDiPersone().stream().filter(new Predicate<Person>() {
+                long countPeopleWithoutMotorBike = g.getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return !carBuilderProperty.getPeopleMotorbike().contains(persona);
                     }
                 }).count();
 
-                //System.out.println("numero persone senza motorino: "+ nPSenzaMotorino);
+                //System.out.println("numero persone senza motorino: "+ countPeopleWithoutMotorin);
 
-                long mPcounterPersoneChedovrebberoUsareMacchinaPizzeria = g.getListaDiPersone().stream().filter(new Predicate<Person>() {
+                long mPcounterPersoneChedovrebberoUsareMacchinaPizzeria = g.getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return carBuilderProperty.getPeoplePizzeriaCar().contains(persona);
                     }
                 }).count();
 
-                long nPersoneCheMacchinaPropria = g.getListaDiPersone().stream().filter(new Predicate<Person>() {
+                long nPersoneCheMacchinaPropria = g.getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return carBuilderProperty.getPeopleOwnCar().contains(persona);
@@ -102,13 +84,13 @@ public class CarBuilder {
                     @Override
                     public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
 
-                        return carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviazione()));
+                        return carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation()));
                     }
                 }).collect(Collectors.toCollection(ArrayList::new));
 
 
                 //System.out.println(l);
-                long numeroScooter = g.getListaDiPersone().stream().filter(new Predicate<Person>() {
+                long numeroScooter = g.getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return carBuilderProperty.getPeopleMotorbike().contains(persona);
@@ -128,7 +110,7 @@ public class CarBuilder {
                     for(int i = 0; i < formula; i++){
                         if(l.size()!=0){
                             Person min = takeMin(l);
-                            numeroVoltePropria.put(min.getAbbreviazione(), numeroVoltePropria.get(min.getAbbreviazione()) + 1);
+                            numeroVoltePropria.put(min.getAbbreviation(), numeroVoltePropria.get(min.getAbbreviation()) + 1);
                             personeDaLasciareLaFlagFalse.add(new Tuple<>(min,true));
                             l.remove(new Tuple<>(min,true));
                         }
@@ -147,8 +129,8 @@ public class CarBuilder {
                     public Tuple<Person, Boolean> apply(Tuple<Person, Boolean> personaBooleanTuple) {
                         Tuple<Person, Boolean> modified = personaBooleanTuple;
                         //System.out.println("persone da lasciare con la flag false: "+ personeDaLasciareLaFlagFalse);
-                        if(!(personeDaLasciareLaFlagFalse.contains(personaBooleanTuple) || (carBuilderProperty.getPeopleMotorbike().contains(new Person(personaBooleanTuple.getPerson().getAbbreviazione())))
-                                || carBuilderProperty.getPeoplePizzeriaCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviazione())))){
+                        if(!(personeDaLasciareLaFlagFalse.contains(personaBooleanTuple) || (carBuilderProperty.getPeopleMotorbike().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation())))
+                                || carBuilderProperty.getPeoplePizzeriaCar().contains(new Person(personaBooleanTuple.getPerson().getAbbreviation())))){
 
                             modified.setUsaMacchinaPropria(true);
                             return modified;

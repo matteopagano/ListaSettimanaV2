@@ -3,19 +3,19 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DayList {
+public class DayOfList {
 
-    private int numberOfSlots;
-    private String name;
-    private List<Tuple<Person, Boolean>> listaDiPersone;
+    private final int numberOfSlots;
+    private final String name;
+    private List<Tuple<Person, Boolean>> listOfPeople;
 
-    public DayList(String g, int n) {
-        listaDiPersone=new ArrayList<>();
+    public DayOfList(String g, int n) {
+        listOfPeople =new ArrayList<>();
         name=g;
         numberOfSlots=n;
     }
     public void addPerson(Person p){
-        listaDiPersone.add(new Tuple<>(p, false));
+        listOfPeople.add(new Tuple<>(p, false));
     }
 
     public String getName() {
@@ -27,31 +27,31 @@ public class DayList {
     }
 
     public List<Tuple<Person,Boolean>> getListOfPeopleWithCar() {
-        return listaDiPersone;
+        return listOfPeople;
     }
 
 
-    public List<Person> getListaDiPersone() {
+    public List<Person> getListOfPeople() {
         List<Person> lista = new ArrayList<>();
-        for (Tuple<Person, Boolean> e : this.listaDiPersone){
+        for (Tuple<Person, Boolean> e : this.listOfPeople){
             lista.add(e.getPerson());
         }
         return lista;
     }
 
-    public void setListaDiPersone(List<Tuple<Person, Boolean>> listaDiPersone) {
-        this.listaDiPersone = listaDiPersone;
+    public void setListOfPeople(List<Tuple<Person, Boolean>> listOfPeople) {
+        this.listOfPeople = listOfPeople;
     }
 
     public boolean isFull(){
-        return getNumberOfSlots() <= listaDiPersone.size();
+        return getNumberOfSlots() <= listOfPeople.size();
     }
     @Override
     public boolean equals(Object o){
-        DayList g;
+        DayOfList g;
         boolean bool=false;
-        if(o instanceof DayList){
-            g=(DayList) o;
+        if(o instanceof DayOfList){
+            g=(DayOfList) o;
             bool=this.name.equals(g.name);
         }
         return bool;
@@ -62,7 +62,7 @@ public class DayList {
         return "GiornoLista{" +
                 "numeroGiorniMAx=" + getNumberOfSlots() +
                 ", name='" + name + '\'' +
-                ", listaDiPersona=" + listaDiPersone +
+                ", listaDiPersona=" + listOfPeople +
                 '}';
     }
 }

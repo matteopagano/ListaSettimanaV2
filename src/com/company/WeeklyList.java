@@ -7,17 +7,17 @@ import java.util.List;
 public class WeeklyList {
 
     private final List<Person> listOfPeople;
-    private final List<DayList> listOfDays;
+    private final List<DayOfList> listOfDays;
     private final CarBuilder carBuilder;
 
-    public WeeklyList(List<Person> listOfPeople, List<DayList> listOfDays, int numberOfPizzeriaCar) {
+    public WeeklyList(List<Person> listOfPeople, List<DayOfList> listOfDays, int numberOfPizzeriaCar) {
         this.listOfPeople = listOfPeople;
         this.listOfDays = listOfDays;
         this.carBuilder = new CarBuilder(CarBuilder.createPropertyCar(listOfPeople, numberOfPizzeriaCar));
     }
 
     public void calculate() throws PrinterException {
-        if(isCorrectDisponibilityAndPerson() && checkIfExcheedFromInitialOptions() && isCorrectAbsence()){
+        if(isCorrectAvailabilityAndPerson() && checkIfExceedsFromInitialOptions() && isCorrectAbsence()){
             boolean guard = true;
             int i=0;
             while(i < 1100000 && guard){
@@ -35,21 +35,21 @@ public class WeeklyList {
 
     private boolean calculateAux() throws PrinterException {
 
-        List<Person> lista = new ArrayList<>();
-        for (Person p : listOfPeople){
+        List<Person> aggregatePeopleList = new ArrayList<>();
+        for (Person p : this.listOfPeople){
             for (int i = 0; i < p.getNumberOfDaysToDo() ; ++i)
-                lista.add(p);
+                aggregatePeopleList.add(p);
         }
 
-        Collections.shuffle(lista);
-        Queue<Person> coda = new LinkedList<>(lista);
+        Collections.shuffle(aggregatePeopleList);
+        Queue<Person> coda = new LinkedList<>(aggregatePeopleList);
 
         while(!coda.isEmpty()){
             Person personToAdd = coda.poll();
-            Iterator<DayList> it = listOfDays.iterator();
+            Iterator<DayOfList> it = this.listOfDays.iterator();
             boolean added = false;
             while(!added && it.hasNext()){
-                DayList g = it.next();
+                DayOfList g = it.next();
                 if(!g.isFull() && isAddable(personToAdd, g) && !isAlreadyPresent(personToAdd, g)){
                     g.addPerson(personToAdd);
                     added = true;
@@ -76,13 +76,21 @@ public class WeeklyList {
     }
 
     private void clearDays() {
-        for (DayList g : listOfDays){
+        for (DayOfList g : listOfDays){
             g.getListOfPeopleWithCar().clear();
         }
     }
 
     public void printList() {
-        for (DayList g : listOfDays){
+        for (DayOfList g : listOfDays){
+            System.out.println(g.getName()+": "+g.getListOfPeopleWithCar());
+        }
+        System.out.println();
+        System.out.println("* = macchina propria.");
+    }
+
+    public static void printList(List<DayOfList> l) {
+        for (DayOfList g : l){
             System.out.println(g.getName()+": "+g.getListOfPeopleWithCar());
         }
         System.out.println();
@@ -94,69 +102,62 @@ public class WeeklyList {
     }
 
     public boolean isCorrectAbsence(){
-        int[] prova = new int[7];
+        int[] occupiedSlots = new int[7];
         for(Person p : this.listOfPeople){
             for(Day g : p.getDaysOfAbsence()){
-                if(g.getDay().toString().equals("Lunedì")){
-                    prova[0] = prova[0] + 1;
-                }else if(g.getDay().toString().equals("Martedì")){
-                    prova[1] = prova[1] + 1;
-                }else if(g.getDay().toString().equals("Mercoledì")){
-                    prova[2] = prova[2] + 1;
-                }else if(g.getDay().toString().equals("Giovedì")){
-                    prova[3] = prova[3] + 1;
-                }else if(g.getDay().toString().equals("Venerdì")){
-                    prova[4] = prova[4] + 1;
-                }else if(g.getDay().toString().equals("Sabato")){
-                    prova[5] = prova[5] + 1;
-                }else if(g.getDay().toString().equals("Domenica")){
-                    prova[6] = prova[6] + 1;
+                switch (g.getDay()) {
+                    case "Lunedì" -> occupiedSlots[0] = occupiedSlots[0] + 1;
+                    case "Martedì" -> occupiedSlots[1] = occupiedSlots[1] + 1;
+                    case "Mercoledì" -> occupiedSlots[2] = occupiedSlots[2] + 1;
+                    case "Giovedì" -> occupiedSlots[3] = occupiedSlots[3] + 1;
+                    case "Venerdì" -> occupiedSlots[4] = occupiedSlots[4] + 1;
+                    case "Sabato" -> occupiedSlots[5] = occupiedSlots[5] + 1;
+                    case "Domenica" -> occupiedSlots[6] = occupiedSlots[6] + 1;
                 }
             }
         }
 
         boolean cond = true;
 
-
-        if(prova[0] + this.listOfDays.get(0).getNumberOfSlots() > listOfPeople.size()){
+        if(occupiedSlots[0] + this.listOfDays.get(0).getNumberOfSlots() > listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Lunedì");
-            System.out.println("Lunedì hai inserito le assenze di " + prova[0] + " persone.");
-        }else if(prova[1] + this.listOfDays.get(1).getNumberOfSlots() > listOfPeople.size()){
+            System.out.println("Lunedì hai inserito le assenze di " + occupiedSlots[0] + " persone.");
+        }else if(occupiedSlots[1] + this.listOfDays.get(1).getNumberOfSlots() > listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Martedì");
-            System.out.println("Martedì hai inserito le assenze di " + prova[1] + " persone.");
-        }else if(prova[2] + this.listOfDays.get(2).getNumberOfSlots() > listOfPeople.size()){
+            System.out.println("Martedì hai inserito le assenze di " + occupiedSlots[1] + " persone.");
+        }else if(occupiedSlots[2] + this.listOfDays.get(2).getNumberOfSlots() > listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Mercoledì");
-            System.out.println("Mercoledì hai inserito le assenze di " + prova[2] + " persone.");
-        }else if(prova[3] + this.listOfDays.get(3).getNumberOfSlots() > listOfPeople.size()){
+            System.out.println("Mercoledì hai inserito le assenze di " + occupiedSlots[2] + " persone.");
+        }else if(occupiedSlots[3] + this.listOfDays.get(3).getNumberOfSlots() > listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Giovedì");
-            System.out.println("Giovedì hai inserito le assenze di " + prova[3] + " persone.");
-        }else if(prova[4] + this.listOfDays.get(4).getNumberOfSlots() > listOfPeople.size()){
+            System.out.println("Giovedì hai inserito le assenze di " + occupiedSlots[3] + " persone.");
+        }else if(occupiedSlots[4] + this.listOfDays.get(4).getNumberOfSlots() > listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Venerdì");
-            System.out.println("Venerdì hai inserito le assenze di " + prova[4] + " persone.");
-        }else if(prova[5] + this.listOfDays.get(5).getNumberOfSlots() >listOfPeople.size()){
+            System.out.println("Venerdì hai inserito le assenze di " + occupiedSlots[4] + " persone.");
+        }else if(occupiedSlots[5] + this.listOfDays.get(5).getNumberOfSlots() >listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Sabato");
-            System.out.println("Sabato hai inserito le assenze di " + prova[5] + " persone.");
-        }else if(prova[6] + this.listOfDays.get(6).getNumberOfSlots() > listOfPeople.size()){
+            System.out.println("Sabato hai inserito le assenze di " + occupiedSlots[5] + " persone.");
+        }else if(occupiedSlots[6] + this.listOfDays.get(6).getNumberOfSlots() > listOfPeople.size()){
             cond = false;
             System.out.println("Controlla Domenica");
-            System.out.println("Domenica hai inserito le assenze di " + prova[6] + " persone.");
+            System.out.println("Domenica hai inserito le assenze di " + occupiedSlots[6] + " persone.");
         }
         return cond;
 
     }
 
-    public boolean isCorrectDisponibilityAndPerson(){
+    public boolean isCorrectAvailabilityAndPerson(){
         boolean cond = true;
         int numeroPresenzeDaOccupare=0;
         int numeroDisponibilitaPersone=0;
 
-        for (DayList g : this.listOfDays){
+        for (DayOfList g : this.listOfDays){
             numeroPresenzeDaOccupare+=g.getNumberOfSlots();
         }
         for (Person p : this.listOfPeople){
@@ -177,10 +178,10 @@ public class WeeklyList {
         return doSlotsAndPeopleMatch() && doDaysMatchFromInitialOptions();
     }
 
-    public boolean isAlreadyPresent(Person personToAdd, DayList g) {
+    public boolean isAlreadyPresent(Person personToAdd, DayOfList g) {
         boolean cond = false;
         for(Tuple<Person,Boolean> g1 : g.getListOfPeopleWithCar()){
-            if (g1.getPerson().getAbbreviazione().equals(personToAdd.getAbbreviazione())) {
+            if (g1.getPerson().getAbbreviation().equals(personToAdd.getAbbreviation())) {
                 cond = true;
                 break;
             }
@@ -188,7 +189,7 @@ public class WeeklyList {
         return cond;
     }
 
-    public boolean isAddable(Person personToAdd, DayList d) {
+    public boolean isAddable(Person personToAdd, DayOfList d) {
         boolean cond = true;
         String s = d.getName();
         for(Day g : personToAdd.getDaysOfAbsence()){
@@ -202,9 +203,10 @@ public class WeeklyList {
 
     private boolean doSlotsAndPeopleMatch(){
         boolean bool = true;
-        for (DayList g : listOfDays){
-            if(g.getListOfPeopleWithCar().size() != g.getNumberOfSlots()){
+        for (DayOfList g : listOfDays){
+            if (g.getListOfPeopleWithCar().size() != g.getNumberOfSlots()) {
                 bool = false;
+                break;
             }
         }
         return bool;
@@ -214,8 +216,8 @@ public class WeeklyList {
         boolean check = true;
         for(Person p : listOfPeople){
             int giorniAssegnati = 0;
-            for(DayList g : listOfDays){
-                if(g.getListaDiPersone().contains(p)){
+            for(DayOfList g : listOfDays){
+                if(g.getListOfPeople().contains(p)){
                     giorniAssegnati ++;
                 }
             }
@@ -224,7 +226,7 @@ public class WeeklyList {
         return check;
     }
 
-    public boolean checkIfExcheedFromInitialOptions(){
+    public boolean checkIfExceedsFromInitialOptions(){
         boolean cond = true;
         for(Person p : listOfPeople){
             if(!p.isExceed()){
@@ -239,9 +241,10 @@ public class WeeklyList {
         return listOfPeople;
     }
 
-    public List<DayList> getListOfDays() {
+    public List<DayOfList> getListOfDays() {
         return listOfDays;
     }
+
 
 
 }

@@ -93,7 +93,7 @@ public class Printer implements Printable {
             int venerdi = 0;
             int sabato = 0;
             int domenica = 0;
-            for (DayList g : weeklyList.getListOfDays()) {
+            for (DayOfList g : weeklyList.getListOfDays()) {
 
                 if (g.getName().equals("Lunedì")) {
                     lunedi = g.getNumberOfSlots();
@@ -127,14 +127,14 @@ public class Printer implements Printable {
             String domenica= " ";
             int totSere = p.getNumberOfDaysToDo();
             Object[] objs;
-            for(DayList g : weeklyList.getListOfDays()){
+            for(DayOfList g : weeklyList.getListOfDays()){
                 if(g.getName().equals("Lunedì")){
                     if(weeklyList.isAlreadyPresent(p,g)){
 
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -151,7 +151,7 @@ public class Printer implements Printable {
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -166,7 +166,7 @@ public class Printer implements Printable {
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -181,7 +181,7 @@ public class Printer implements Printable {
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -196,7 +196,7 @@ public class Printer implements Printable {
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -211,7 +211,7 @@ public class Printer implements Printable {
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 
@@ -226,7 +226,7 @@ public class Printer implements Printable {
                         ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                             @Override
                             public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
-                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviazione()), true));
+                                return personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true));
                             }
                         }).collect(Collectors.toCollection(ArrayList::new));
 

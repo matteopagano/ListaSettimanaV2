@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Person {
-    private String abbreviazione;
+    private String abbreviation;
     private String name;
     private int numberOfDaysToDo;
     private List<Day> daysOfAbsence;
@@ -17,18 +17,18 @@ public class Person {
     public Person(int i, String m, String color, String nome, Means means) {
         this.name = nome;
         this.daysOfAbsence = new ArrayList<>();
-        this.abbreviazione = m;
+        this.abbreviation = m;
         this.numberOfDaysToDo = i;
         this.color = color;
         this.means = means;
     }
 
     public Person(String m) {
-        this.abbreviazione = m;
+        this.abbreviation = m;
     }
 
-    public void addListaAssenze(List<Day> assenze) {
-        daysOfAbsence.addAll(assenze);
+    public void addAbsences(List<Day> absences) {
+        daysOfAbsence.addAll(absences);
     }
 
     public List<Day> getDaysOfAbsence() {
@@ -39,20 +39,20 @@ public class Person {
         return numberOfDaysToDo;
     }
 
-    public String getAbbreviazione() {
-        return abbreviazione;
+    public String getAbbreviation() {
+        return abbreviation;
     }
 
     @Override
     public String toString() {
-        return color + abbreviazione + ANSI_RESET;
+        return color + abbreviation + ANSI_RESET;
     }
 
     public boolean isExceed(){
         int daysOfAbsence = this.daysOfAbsence.size();
         boolean cond = daysOfAbsence + getNumberOfDaysToDo() <= 7;
         if(!cond){
-            System.out.println("Controlla: "+this.abbreviazione);
+            System.out.println("Controlla: "+this.abbreviation);
             System.out.println("Giorni lavorativi:"+this.getNumberOfDaysToDo());
             System.out.println("Assenze inpostate:"+daysOfAbsence);
         }
@@ -68,15 +68,15 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person persona = (Person) o;
-        return Objects.equals(abbreviazione, persona.abbreviazione);
+        return Objects.equals(abbreviation, persona.abbreviation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(abbreviazione);
+        return Objects.hash(abbreviation);
     }
 
-    public void setAbbreviazione(String abbreviazione) {
-        this.abbreviazione = abbreviazione;
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 }
