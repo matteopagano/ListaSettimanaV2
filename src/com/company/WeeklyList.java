@@ -59,8 +59,8 @@ public class WeeklyList {
     }
 
     private boolean calculateAux() throws PrinterException {
-        Queue<Person> coda = new LinkedList<>(makeAggregateOccurrencesRand());
-        generateList(coda);
+        Queue<Person> randomQueue = new LinkedList<>(makeAggregateOccurrencesRand());
+        generateList(randomQueue);
 
         if(!isListCorrect()){
             clearDays();
