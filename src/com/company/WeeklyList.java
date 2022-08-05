@@ -33,17 +33,17 @@ public class WeeklyList {
         }
     }
 
-    private boolean calculateAux() throws PrinterException {
-
-        List<Person> aggregatePeopleList = new ArrayList<>();
+    private List<Person> makeAggregateOccurrencesRand(){
+        List<Person> aggregateOccurrencesOfPeople = new ArrayList<>();
         for (Person p : this.listOfPeople){
             for (int i = 0; i < p.getNumberOfDaysToDo() ; ++i)
-                aggregatePeopleList.add(p);
+                aggregateOccurrencesOfPeople.add(p);
         }
+        Collections.shuffle(aggregateOccurrencesOfPeople);
+        return aggregateOccurrencesOfPeople;
+    }
 
-        Collections.shuffle(aggregatePeopleList);
-        Queue<Person> coda = new LinkedList<>(aggregatePeopleList);
-
+    private void generateList(Queue<Person> coda){
         while(!coda.isEmpty()){
             Person personToAdd = coda.poll();
             Iterator<DayOfList> it = this.listOfDays.iterator();
@@ -56,12 +56,18 @@ public class WeeklyList {
                 }
             }
         }
+    }
+
+    private boolean calculateAux() throws PrinterException {
+        Queue<Person> coda = new LinkedList<>(makeAggregateOccurrencesRand());
+        generateList(coda);
 
         if(!isListCorrect()){
             clearDays();
             return false;
-        }else {
+        } else {
             this.carBuilder.makeListWithCarsOptions(this);
+
             if(carBuilder.isFair(1)){
                 System.out.println("Distanza Corretta");
                 System.out.println(carBuilder.getPerson_NumberOfTimesOwnCar());
