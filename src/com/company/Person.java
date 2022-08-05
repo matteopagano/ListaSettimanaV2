@@ -48,7 +48,7 @@ public class Person {
         return color + abbreviation + ANSI_RESET;
     }
 
-    public boolean isExceed(){
+    public boolean isAbsenceAndDayToDoCorrects(){
         int daysOfAbsence = this.daysOfAbsence.size();
         boolean cond = daysOfAbsence + getNumberOfDaysToDo() <= 7;
         if(!cond){

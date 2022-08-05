@@ -235,7 +235,7 @@ public class WeeklyList {
     public boolean checkIfExceedsFromInitialOptions(){
         boolean cond = true;
         for(Person p : listOfPeople){
-            if(!p.isExceed()){
+            if(!p.isAbsenceAndDayToDoCorrects()){
                 cond = false;
                 break;
             }

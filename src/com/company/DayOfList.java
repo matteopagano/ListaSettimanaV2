@@ -32,11 +32,11 @@ public class DayOfList {
 
 
     public List<Person> getListOfPeople() {
-        List<Person> lista = new ArrayList<>();
+        List<Person> list = new ArrayList<>();
         for (Tuple<Person, Boolean> e : this.listOfPeople){
-            lista.add(e.getT1());
+            list.add(e.getT1());
         }
-        return lista;
+        return list;
     }
 
     public void setListOfPeople(List<Tuple<Person, Boolean>> listOfPeople) {
