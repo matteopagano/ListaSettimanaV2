@@ -7,12 +7,15 @@ import java.util.List;
 public class WeeklyList {
 
     private final List<Person> listOfPeople;
-    private final List<DayOfList> listOfDays;
+    private final Map<Day,DayOfList> listOfDays;
     private final CarBuilder carBuilder;
 
     public WeeklyList(List<Person> listOfPeople, List<DayOfList> listOfDays, int numberOfPizzeriaCar) {
         this.listOfPeople = listOfPeople;
-        this.listOfDays = listOfDays;
+        this.listOfDays = new HashMap<>();
+        for (DayOfList d : listOfDays){
+            this.listOfDays.put(Day.getDayByName(d.getName()),d);
+        }
         this.carBuilder = new CarBuilder(CarBuilder.createPropertyCar(listOfPeople, numberOfPizzeriaCar));
     }
 
@@ -46,12 +49,13 @@ public class WeeklyList {
     private void generateList(Queue<Person> coda){
         while(!coda.isEmpty()){
             Person personToAdd = coda.poll();
-            Iterator<DayOfList> it = this.listOfDays.iterator();
+
+            Iterator<Map.Entry<Day, DayOfList>> it = this.listOfDays.entrySet().iterator();
             boolean added = false;
             while(!added && it.hasNext()){
-                DayOfList g = it.next();
-                if(!g.isFull() && isAddable(personToAdd, g) && !isAlreadyPresent(personToAdd, g)){
-                    g.addPerson(personToAdd);
+                Map.Entry<Day, DayOfList> g = it.next();
+                if(!g.getValue().isFull() && isAddable(personToAdd, g.getValue()) && !isAlreadyPresent(personToAdd, g.getValue())){
+                    g.getValue().addPerson(personToAdd);
                     added = true;
                 }
             }
@@ -71,7 +75,7 @@ public class WeeklyList {
             if(carBuilder.isFair(1)){
                 System.out.println("Distanza Corretta");
                 System.out.println(carBuilder.getPerson_NumberOfTimesOwnCar());
-                printList();
+                printListInOrder();
                 sendToPrinter();
                 return true;
             }else{
@@ -82,15 +86,29 @@ public class WeeklyList {
     }
 
     private void clearDays() {
-        for (DayOfList g : listOfDays){
-            g.getListOfPeopleWithCar().clear();
+        for (Map.Entry<Day, DayOfList>  g : listOfDays.entrySet()){
+            g.getValue().getListOfPeopleWithCar().clear();
         }
     }
 
     public void printList() {
-        for (DayOfList g : listOfDays){
-            System.out.println(g.getName()+": "+g.getListOfPeopleWithCar());
+        for (Map.Entry<Day, DayOfList>  g : listOfDays.entrySet()){
+            System.out.println(g.getValue().getName()+": "+g.getValue().getListOfPeopleWithCar());
         }
+        System.out.println();
+        System.out.println("* = macchina propria.");
+    }
+
+    public void printListInOrder() {
+
+        System.out.println(listOfDays.get(Day.getLunedi()).getName()+": "+listOfDays.get(Day.getLunedi()).getListOfPeopleWithCar());
+        System.out.println(listOfDays.get(Day.getMartedi()).getName()+": "+listOfDays.get(Day.getMartedi()).getListOfPeopleWithCar());
+        System.out.println(listOfDays.get(Day.getMercoledi()).getName()+": "+listOfDays.get(Day.getMercoledi()).getListOfPeopleWithCar());
+        System.out.println(listOfDays.get(Day.getGiovedi()).getName()+": "+listOfDays.get(Day.getGiovedi()).getListOfPeopleWithCar());
+        System.out.println(listOfDays.get(Day.getVenerdi()).getName()+": "+listOfDays.get(Day.getVenerdi()).getListOfPeopleWithCar());
+        System.out.println(listOfDays.get(Day.getSabato()).getName()+": "+listOfDays.get(Day.getSabato()).getListOfPeopleWithCar());
+        System.out.println(listOfDays.get(Day.getDomenica()).getName()+": "+listOfDays.get(Day.getDomenica()).getListOfPeopleWithCar());
+
         System.out.println();
         System.out.println("* = macchina propria.");
     }
@@ -108,54 +126,46 @@ public class WeeklyList {
     }
 
     public boolean isCorrectAbsence(){
-        int[] occupiedSlots = new int[7];
-        for(Person p : this.listOfPeople){
-            for(Day g : p.getDaysOfAbsence()){
-                switch (g.getDay()) {
-                    case "Lunedì" -> occupiedSlots[0] = occupiedSlots[0] + 1;
-                    case "Martedì" -> occupiedSlots[1] = occupiedSlots[1] + 1;
-                    case "Mercoledì" -> occupiedSlots[2] = occupiedSlots[2] + 1;
-                    case "Giovedì" -> occupiedSlots[3] = occupiedSlots[3] + 1;
-                    case "Venerdì" -> occupiedSlots[4] = occupiedSlots[4] + 1;
-                    case "Sabato" -> occupiedSlots[5] = occupiedSlots[5] + 1;
-                    case "Domenica" -> occupiedSlots[6] = occupiedSlots[6] + 1;
-                }
-            }
-        }
 
+        Map<Day, Integer> occupiedSlots = fillOccupiedSlots();
         boolean cond = true;
 
-        if(occupiedSlots[0] + this.listOfDays.get(0).getNumberOfSlots() > listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Lunedì");
-            System.out.println("Lunedì hai inserito le assenze di " + occupiedSlots[0] + " persone.");
-        }else if(occupiedSlots[1] + this.listOfDays.get(1).getNumberOfSlots() > listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Martedì");
-            System.out.println("Martedì hai inserito le assenze di " + occupiedSlots[1] + " persone.");
-        }else if(occupiedSlots[2] + this.listOfDays.get(2).getNumberOfSlots() > listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Mercoledì");
-            System.out.println("Mercoledì hai inserito le assenze di " + occupiedSlots[2] + " persone.");
-        }else if(occupiedSlots[3] + this.listOfDays.get(3).getNumberOfSlots() > listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Giovedì");
-            System.out.println("Giovedì hai inserito le assenze di " + occupiedSlots[3] + " persone.");
-        }else if(occupiedSlots[4] + this.listOfDays.get(4).getNumberOfSlots() > listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Venerdì");
-            System.out.println("Venerdì hai inserito le assenze di " + occupiedSlots[4] + " persone.");
-        }else if(occupiedSlots[5] + this.listOfDays.get(5).getNumberOfSlots() >listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Sabato");
-            System.out.println("Sabato hai inserito le assenze di " + occupiedSlots[5] + " persone.");
-        }else if(occupiedSlots[6] + this.listOfDays.get(6).getNumberOfSlots() > listOfPeople.size()){
-            cond = false;
-            System.out.println("Controlla Domenica");
-            System.out.println("Domenica hai inserito le assenze di " + occupiedSlots[6] + " persone.");
+        for (Map.Entry<Day, Integer> m : occupiedSlots.entrySet()){
+            if(m.getValue() + this.listOfDays.get(m.getKey()).getNumberOfSlots() > listOfPeople.size()){
+                cond = false;
+                System.out.println("Controlla " + m.getKey().toString());
+                System.out.println(m.getKey().toString() + " hai inserito le assenze di " + occupiedSlots.get(m.getKey()) + " persone.");
+            }
         }
         return cond;
 
+    }
+
+    private Map<Day, Integer> fillOccupiedSlots() {
+        Map<Day, Integer> occupiedSlots = new HashMap<>();
+        occupiedSlots.put(Day.getLunedi(),0);
+        occupiedSlots.put(Day.getMartedi(),0);
+        occupiedSlots.put(Day.getMercoledi(),0);
+        occupiedSlots.put(Day.getGiovedi(),0);
+        occupiedSlots.put(Day.getVenerdi(),0);
+        occupiedSlots.put(Day.getSabato(),0);
+        occupiedSlots.put(Day.getDomenica(),0);
+
+
+        for(Person p : this.listOfPeople){
+            for(Day g : p.getDaysOfAbsence()){
+                switch (g.getDay()) {
+                    case "Lunedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getLunedi() ) + 1);
+                    case "Martedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getMartedi() ) + 1);
+                    case "Mercoledì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getMercoledi() ) + 1);
+                    case "Giovedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getGiovedi() ) + 1);
+                    case "Venerdì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getVenerdi() ) + 1);
+                    case "Sabato" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getSabato() ) + 1);
+                    case "Domenica" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getDomenica() ) + 1);
+                }
+            }
+        }
+        return occupiedSlots;
     }
 
     public boolean isCorrectAvailabilityAndPerson(){
@@ -163,8 +173,8 @@ public class WeeklyList {
         int numeroPresenzeDaOccupare=0;
         int numeroDisponibilitaPersone=0;
 
-        for (DayOfList g : this.listOfDays){
-            numeroPresenzeDaOccupare+=g.getNumberOfSlots();
+        for (Map.Entry<Day, DayOfList>  g : listOfDays.entrySet()){
+            numeroPresenzeDaOccupare+=g.getValue().getNumberOfSlots();
         }
         for (Person p : this.listOfPeople){
             numeroDisponibilitaPersone+=p.getNumberOfDaysToDo();
@@ -209,8 +219,8 @@ public class WeeklyList {
 
     private boolean doSlotsAndPeopleMatch(){
         boolean bool = true;
-        for (DayOfList g : listOfDays){
-            if (g.getListOfPeopleWithCar().size() != g.getNumberOfSlots()) {
+        for (Map.Entry<Day, DayOfList>  g : listOfDays.entrySet()){
+            if (g.getValue().getListOfPeopleWithCar().size() != g.getValue().getNumberOfSlots()) {
                 bool = false;
                 break;
             }
@@ -222,8 +232,8 @@ public class WeeklyList {
         boolean check = true;
         for(Person p : listOfPeople){
             int giorniAssegnati = 0;
-            for(DayOfList g : listOfDays){
-                if(g.getListOfPeople().contains(p)){
+            for(Map.Entry<Day, DayOfList>  g : listOfDays.entrySet()){
+                if(g.getValue().getListOfPeople().contains(p)){
                     giorniAssegnati ++;
                 }
             }
@@ -247,7 +257,7 @@ public class WeeklyList {
         return listOfPeople;
     }
 
-    public List<DayOfList> getListOfDays() {
+    public Map<Day,DayOfList> getListOfDays() {
         return listOfDays;
     }
 

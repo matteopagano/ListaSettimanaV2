@@ -31,14 +31,14 @@ public class CarBuilder {
     }
 
     public void makeListWithCarsOptions(WeeklyList listaSettimana) {
-        for(DayOfList g : listaSettimana.getListOfDays()){
+        for(Map.Entry<Day, DayOfList> g: listaSettimana.getListOfDays().entrySet()){
             //System.out.println(g.getName()+": "+ g.getListaDiPersone());
-            if(g.getListOfPeople().containsAll(this.carBuilderProperty.getPeoplePizzeriaCar()) && this.carBuilderProperty.getPeoplePizzeriaCar().size() == getNumeroMacchinePizzeria()){
-                ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getT1().getAbbreviation()))).collect(Collectors.toCollection(ArrayList::new));
+            if(g.getValue().getListOfPeople().containsAll(this.carBuilderProperty.getPeoplePizzeriaCar()) && this.carBuilderProperty.getPeoplePizzeriaCar().size() == getNumeroMacchinePizzeria()){
+                ArrayList<Tuple<Person,Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> carBuilderProperty.getPeopleOwnCar().contains(new Person(personaBooleanTuple.getT1().getAbbreviation()))).collect(Collectors.toCollection(ArrayList::new));
 
                 l.replaceAll(personaBooleanTuple -> new Tuple<>(personaBooleanTuple.getT1(),true));
 
-                g.getListOfPeopleWithCar().replaceAll(personaBooleanTuple -> {
+                g.getValue().getListOfPeopleWithCar().replaceAll(personaBooleanTuple -> {
                     Tuple<Person, Boolean> modified = personaBooleanTuple;
                     if(l.contains(personaBooleanTuple)){
 
@@ -57,7 +57,7 @@ public class CarBuilder {
             else{
 
 
-                long countPeopleWithoutMotorBike = g.getListOfPeople().stream().filter(new Predicate<Person>() {
+                long countPeopleWithoutMotorBike = g.getValue().getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return !carBuilderProperty.getPeopleMotorbike().contains(persona);
@@ -66,21 +66,21 @@ public class CarBuilder {
 
                 //System.out.println("numero persone senza motorino: "+ countPeopleWithoutMotorin);
 
-                long mPcounterPersoneChedovrebberoUsareMacchinaPizzeria = g.getListOfPeople().stream().filter(new Predicate<Person>() {
+                long mPcounterPersoneChedovrebberoUsareMacchinaPizzeria = g.getValue().getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return carBuilderProperty.getPeoplePizzeriaCar().contains(persona);
                     }
                 }).count();
 
-                long nPersoneCheMacchinaPropria = g.getListOfPeople().stream().filter(new Predicate<Person>() {
+                long nPersoneCheMacchinaPropria = g.getValue().getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return carBuilderProperty.getPeopleOwnCar().contains(persona);
                     }
                 }).count();
 
-                ArrayList<Tuple<Person,Boolean>> l = g.getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
+                ArrayList<Tuple<Person,Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(new Predicate<Tuple<Person, Boolean>>() {
                     @Override
                     public boolean test(Tuple<Person, Boolean> personaBooleanTuple) {
 
@@ -90,7 +90,7 @@ public class CarBuilder {
 
 
                 //System.out.println(l);
-                long numeroScooter = g.getListOfPeople().stream().filter(new Predicate<Person>() {
+                long numeroScooter = g.getValue().getListOfPeople().stream().filter(new Predicate<Person>() {
                     @Override
                     public boolean test(Person persona) {
                         return carBuilderProperty.getPeopleMotorbike().contains(persona);
@@ -124,7 +124,7 @@ public class CarBuilder {
 
                 }
 
-                g.getListOfPeopleWithCar().replaceAll(new UnaryOperator<Tuple<Person, Boolean>>() {
+                g.getValue().getListOfPeopleWithCar().replaceAll(new UnaryOperator<Tuple<Person, Boolean>>() {
                     @Override
                     public Tuple<Person, Boolean> apply(Tuple<Person, Boolean> personaBooleanTuple) {
                         Tuple<Person, Boolean> modified = personaBooleanTuple;

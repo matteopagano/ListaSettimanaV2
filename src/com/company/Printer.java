@@ -10,6 +10,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -93,16 +94,16 @@ public class Printer implements Printable {
             int venerdi = 0;
             int sabato = 0;
             int domenica = 0;
-            for (DayOfList g : weeklyList.getListOfDays()) {
+            for (Map.Entry<Day, DayOfList>  g : weeklyList.getListOfDays().entrySet()) {
 
-                switch (g.getName()) {
-                    case "Lunedì" -> lunedi = g.getNumberOfSlots();
-                    case "Martedì" -> martedi = g.getNumberOfSlots();
-                    case "Mercoledì" -> mercoledi = g.getNumberOfSlots();
-                    case "Giovedì" -> giovedi = g.getNumberOfSlots();
-                    case "Venerdì" -> venerdi = g.getNumberOfSlots();
-                    case "Sabato" -> sabato = g.getNumberOfSlots();
-                    case "Domenica" -> domenica = g.getNumberOfSlots();
+                switch (g.getValue().getName()) {
+                    case "Lunedì" -> lunedi = g.getValue().getNumberOfSlots();
+                    case "Martedì" -> martedi = g.getValue().getNumberOfSlots();
+                    case "Mercoledì" -> mercoledi = g.getValue().getNumberOfSlots();
+                    case "Giovedì" -> giovedi = g.getValue().getNumberOfSlots();
+                    case "Venerdì" -> venerdi = g.getValue().getNumberOfSlots();
+                    case "Sabato" -> sabato = g.getValue().getNumberOfSlots();
+                    case "Domenica" -> domenica = g.getValue().getNumberOfSlots();
                 }
 
             }
@@ -121,15 +122,15 @@ public class Printer implements Printable {
             String domenica= " ";
 
             Object[] objs;
-            for(DayOfList g : weeklyList.getListOfDays()){
-                switch (g.getName()) {
+            for(Map.Entry<Day, DayOfList>  g : weeklyList.getListOfDays().entrySet()){
+                switch (g.getValue().getName()) {
                     case "Lunedì":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
 
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                lunedi = "\u24CD";
+                                lunedi = "(X)";
                             } else {
                                 lunedi = "X";
                             }
@@ -138,66 +139,66 @@ public class Printer implements Printable {
                         }
                         break;
                     case "Martedì":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                martedi = "\u24CD";
+                                martedi = "(X)";
                             } else {
                                 martedi = "X";
                             }
                         }
                         break;
                     case "Mercoledì":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                mercoledi = "\u24CD";
+                                mercoledi = "(X)";
                             } else {
                                 mercoledi = "X";
                             }
                         }
                         break;
                     case "Giovedì":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                giovedi = "\u24CD";
+                                giovedi = "(X)";
                             } else {
                                 giovedi = "X";
                             }
                         }
                         break;
                     case "Venerdì":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                venerdi = "\u24CD";
+                                venerdi = "(X)";
                             } else {
                                 venerdi = "X";
                             }
                         }
                         break;
                     case "Sabato":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                sabato = "\u24CD";
+                                sabato = "(X)";
                             } else {
                                 sabato = "X";
                             }
                         }
                         break;
                     case "Domenica":
-                        if (weeklyList.isAlreadyPresent(p, g)) {
-                            ArrayList<Tuple<Person, Boolean>> l = g.getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
+                        if (weeklyList.isAlreadyPresent(p, g.getValue())) {
+                            ArrayList<Tuple<Person, Boolean>> l = g.getValue().getListOfPeopleWithCar().stream().filter(personaBooleanTuple -> personaBooleanTuple.equals(new Tuple<>(new Person(p.getAbbreviation()), true))).collect(Collectors.toCollection(ArrayList::new));
 
                             if (l.get(0).getT2()) {
-                                domenica = "\u24CD";
+                                domenica = "(X)";
                             } else {
                                 domenica = "X";
                             }
@@ -212,37 +213,37 @@ public class Printer implements Printable {
 
             if(lunedi.equals("X")){
                 macchinaPiz ++;
-            }else if(lunedi.equals("\u24CD")){
+            }else if(lunedi.equals("(X)")){
                 macchinaPropria ++;
             }
             if(martedi.equals("X")){
                 macchinaPiz ++;
-            }else if(martedi.equals("\u24CD")){
+            }else if(martedi.equals("(X)")){
                 macchinaPropria ++;
             }
             if(mercoledi.equals("X")){
                 macchinaPiz ++;
-            }else if(mercoledi.equals("\u24CD")){
+            }else if(mercoledi.equals("(X)")){
                 macchinaPropria ++;
             }
             if(giovedi.equals("X")){
                 macchinaPiz ++;
-            }else if(giovedi.equals("\u24CD")){
+            }else if(giovedi.equals("(X)")){
                 macchinaPropria ++;
             }
             if(venerdi.equals("X")){
                 macchinaPiz ++;
-            }else if(venerdi.equals("\u24CD")){
+            }else if(venerdi.equals("(X)")){
                 macchinaPropria ++;
             }
             if(sabato.equals("X")){
                 macchinaPiz ++;
-            }else if(sabato.equals("\u24CD")){
+            }else if(sabato.equals("(X)")){
                 macchinaPropria ++;
             }
             if(domenica.equals("X")){
                 macchinaPiz ++;
-            }else if(domenica.equals("\u24CD")){
+            }else if(domenica.equals("(X)")){
                 macchinaPropria ++;
             }
 

@@ -66,7 +66,6 @@ public class Main {
 
         List<Day> assenzeGigi = new ArrayList<>();
         assenzeGigi.add(venerdi);
-        assenzeGigi.add(sabato);
         assenzeGigi.add(domenica);
 
         List<Day> assenzeEnrico = new ArrayList<>();
@@ -83,8 +82,8 @@ public class Main {
         assenzePandi.add(domenica);
 
         List<Day> assenzeOmar = new ArrayList<>();
-        assenzeOmar.add(sabato);
-        assenzeOmar.add(domenica);
+        assenzeOmar.add(mercoledi);
+        assenzeOmar.add(venerdi);
 
         pandi.addAbsences(assenzePandi);
         pietro.addAbsences(assenzePietro);
@@ -105,6 +104,10 @@ public class Main {
         listOfPeople.add(omar);
 
         WeeklyList weeklyList = new WeeklyList(listOfPeople, listaGiorni, 2);
+
+
+
+
 
         weeklyList.calculate();
 
