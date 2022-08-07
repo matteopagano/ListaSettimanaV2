@@ -50,9 +50,7 @@ public class Day {
 
     @Override
     public String toString() {
-        return "Giorno{" +
-                "giorno='" + day + '\'' +
-                '}';
+        return day;
     }
 
     @Override
