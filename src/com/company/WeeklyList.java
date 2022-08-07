@@ -45,9 +45,42 @@ public class WeeklyList {
         }
     }
 
+    public Person getPersonThatWorkMinus(){
+        Person ret = null;
+        for(Person p : this.listOfPeople){
+            if(ret == null && p.getNumberOfDaysToDo() != 0){
+                ret = p;
+            }else{
+                if(p.getNumberOfDaysToDo() < ret.getNumberOfDaysToDo() && p.getNumberOfDaysToDo() != 0){
+                    ret = p;
+                }
+            }
+        }
+        return ret;
+    }
+
+    public Person getPersonThatWorkPlus(){
+        Person ret = null;
+        for(Person p : this.listOfPeople){
+            if(ret == null && p.getNumberOfDaysToDo() != 0){
+                ret = p;
+            }else{
+                if(p.getNumberOfDaysToDo() > ret.getNumberOfDaysToDo() && p.getNumberOfDaysToDo() != 0){
+                    ret = p;
+                }
+            }
+        }
+        return ret;
+    }
+
     public void getHint(Day d){
         System.out.println("Queste sono le persone che NON POSSONO lavorare " + d.getDay() + " : " + getPeopleCantWorkThisDay(d));
         System.out.println("Queste sono le persone che POSSONO lavorare " + d.getDay() + " : " + getPeopleCanWorkThisDay(d));
+
+        System.out.println("Prova a modificare " + getPersonThatWorkMinus());
+        System.out.println("Prova a modificare " + getPersonThatWorkPlus());
+
+
 
     }
 
