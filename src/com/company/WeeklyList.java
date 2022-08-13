@@ -3,24 +3,18 @@ package com.company;
 import java.awt.print.PrinterException;
 import java.util.*;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class WeeklyList {
 
     private final List<Person> listOfPeople;
     private final Map<Day,DayOfList> listOfDays;
     private final CarBuilder carBuilder;
-    private Map<Day,Integer> test = new HashMap<>();
 
     public WeeklyList(List<Person> listOfPeople, List<DayOfList> listOfDays, int numberOfPizzeriaCar) {
         this.listOfPeople = listOfPeople;
         this.listOfDays = new HashMap<>();
         for (DayOfList d : listOfDays){
             this.listOfDays.put(Day.getDayByName(d.getName()),d);
-        }
-
-        for(Map.Entry<Day, DayOfList> e : this.listOfDays.entrySet()){
-            this.test.put(e.getKey(), 0);
         }
         this.carBuilder = new CarBuilder(CarBuilder.createPropertyCar(listOfPeople, numberOfPizzeriaCar));
     }
@@ -33,82 +27,15 @@ public class WeeklyList {
                 if(calculateAux()){
                     guard = false;
                     System.out.println("volte: " + i);
-                    printTest();
                 }
                 i++;
             }
             if(guard){
                 System.out.println("Non esistono combinazioni");
-                //printTest();
-                getHint(adjustWorkingDay());
             }
         }
     }
 
-    public Person getPersonThatWorkMinus(){
-        Person ret = null;
-        for(Person p : this.listOfPeople){
-            if(ret == null && p.getNumberOfDaysToDo() != 0){
-                ret = p;
-            }else{
-                if(p.getNumberOfDaysToDo() < ret.getNumberOfDaysToDo() && p.getNumberOfDaysToDo() != 0){
-                    ret = p;
-                }
-            }
-        }
-        return ret;
-    }
-
-    public Person getPersonThatWorkPlus(){
-        Person ret = null;
-        for(Person p : this.listOfPeople){
-            if(ret == null && p.getNumberOfDaysToDo() != 0){
-                ret = p;
-            }else{
-                if(p.getNumberOfDaysToDo() > ret.getNumberOfDaysToDo() && p.getNumberOfDaysToDo() != 0){
-                    ret = p;
-                }
-            }
-        }
-        return ret;
-    }
-
-    public void getHint(Day d){
-        System.out.println("Queste sono le persone che NON POSSONO lavorare " + d.getDay() + " : " + getPeopleCantWorkThisDay(d));
-        System.out.println("Queste sono le persone che POSSONO lavorare " + d.getDay() + " : " + getPeopleCanWorkThisDay(d));
-
-        System.out.println("Prova a modificare " + getPersonThatWorkMinus());
-        System.out.println("Prova a modificare " + getPersonThatWorkPlus());
-
-
-
-    }
-
-    public List<Person> getPeopleCantWorkThisDay(Day d){
-        List<Person> list = new ArrayList<>();
-        for(Person p : this.listOfPeople){
-            if(p.getDaysOfAbsence().contains(d)){
-                list.add(p);
-            }
-        }
-        return list;
-    }
-
-    public List<Person> getPeopleCanWorkThisDay(Day d){
-        List<Person> list = new ArrayList<>();
-        for(Person p : this.listOfPeople){
-            if(!p.getDaysOfAbsence().contains(d)){
-                list.add(p);
-            }
-        }
-        return list;
-    }
-
-    private void printTest(){
-        for (Map.Entry<Day, Integer> e : this.test.entrySet()){
-            System.out.println(e.getKey() + " : " +e.getValue());
-        }
-    }
     private List<Person> makeAggregateOccurrencesRand(){
         List<Person> aggregateOccurrencesOfPeople = new ArrayList<>();
         for (Person p : this.listOfPeople){
@@ -117,23 +44,6 @@ public class WeeklyList {
         }
         Collections.shuffle(aggregateOccurrencesOfPeople);
         return aggregateOccurrencesOfPeople;
-    }
-
-    private Day adjustWorkingDay(){
-        Tuple<Day, Integer> t = null;
-        for(Map.Entry<Day, Integer> e : this.test.entrySet()){
-            if(t == null){
-                t = new Tuple<>(e.getKey(),e.getValue());
-            }else{
-                if(e.getValue() < t.getT2()){
-                    t = new Tuple<>(e.getKey(), e.getValue());
-                }
-            }
-        }
-        if(t != null){
-            System.out.println("Mi sa che dovresti aggiustare " + t.getT1().getDay());
-        }
-        return t.getT1();
     }
 
     private void generateList(Queue<Person> coda){
@@ -152,28 +62,10 @@ public class WeeklyList {
         }
     }
 
-
-
-    private boolean isCorrectDay(DayOfList d){
-        return d.getListOfPeople().size() == d.getNumberOfSlots();
-    }
-    private void updateTest(){
-        for (Map.Entry<Day, DayOfList> e : this.listOfDays.entrySet()){
-            if(isCorrectDay(e.getValue())){
-                this.test.replace(e.getKey(), this.test.get(e.getKey()) + 1);
-            }
-        }
-    }
-
     private boolean calculateAux() throws PrinterException {
         Queue<Person> randomQueue = new LinkedList<>(makeAggregateOccurrencesRand());
         generateList(randomQueue);
 
-        updateTest();
-
-
-
-        //printList();
         if(!isListCorrect()){
             clearDays();
             return false;
@@ -184,7 +76,7 @@ public class WeeklyList {
                 System.out.println("Distanza Corretta");
                 System.out.println(carBuilder.getPerson_NumberOfTimesOwnCar());
                 printListInOrder();
-                //sendToPrinter();
+                sendToPrinter();
                 return true;
             }else{
                 clearDays();
@@ -238,11 +130,10 @@ public class WeeklyList {
         Map<Day, Integer> occupiedSlots = fillOccupiedSlots();
         boolean cond = true;
 
-        //System.out.println(occupiedSlots);
         for (Map.Entry<Day, Integer> m : occupiedSlots.entrySet()){
             if(m.getValue() + this.listOfDays.get(m.getKey()).getNumberOfSlots() > listOfPeople.size()){
                 cond = false;
-                System.out.println("Controlla " + m.getKey());
+                System.out.println("Controlla " + m.getKey().toString());
                 System.out.println(m.getKey().toString() + " hai inserito le assenze di " + occupiedSlots.get(m.getKey()) + " persone.");
             }
         }
@@ -264,13 +155,13 @@ public class WeeklyList {
         for(Person p : this.listOfPeople){
             for(Day g : p.getDaysOfAbsence()){
                 switch (g.getDay()) {
-                    case "Lunedì" -> occupiedSlots.put(Day.getLunedi(),occupiedSlots.get(Day.getLunedi() ) + 1);
-                    case "Martedì" -> occupiedSlots.put(Day.getMartedi(),occupiedSlots.get(Day.getMartedi() ) + 1);
-                    case "Mercoledì" -> occupiedSlots.put(Day.getMercoledi(),occupiedSlots.get(Day.getMercoledi() ) + 1);
-                    case "Giovedì" -> occupiedSlots.put(Day.getGiovedi(),occupiedSlots.get(Day.getGiovedi() ) + 1);
-                    case "Venerdì" -> occupiedSlots.put(Day.getVenerdi(),occupiedSlots.get(Day.getVenerdi() ) + 1);
-                    case "Sabato" -> occupiedSlots.put(Day.getSabato(),occupiedSlots.get(Day.getSabato() ) + 1);
-                    case "Domenica" -> occupiedSlots.put(Day.getDomenica(),occupiedSlots.get(Day.getDomenica() ) + 1);
+                    case "Lunedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getLunedi() ) + 1);
+                    case "Martedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getMartedi() ) + 1);
+                    case "Mercoledì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getMercoledi() ) + 1);
+                    case "Giovedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getGiovedi() ) + 1);
+                    case "Venerdì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getVenerdi() ) + 1);
+                    case "Sabato" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getSabato() ) + 1);
+                    case "Domenica" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getDomenica() ) + 1);
                 }
             }
         }

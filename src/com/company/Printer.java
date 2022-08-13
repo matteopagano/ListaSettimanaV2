@@ -291,7 +291,8 @@ public class Printer implements Printable {
         sp.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
         f.add(sp);
         // Frame Size
-        f.setSize(825, 330);
+        int height = weeklyList.getListOfPeople().size() * 40;
+        f.setSize(825, height);
         // Frame Visible = true
         f.setVisible(true);
         PrinterJob pjob = PrinterJob.getPrinterJob();

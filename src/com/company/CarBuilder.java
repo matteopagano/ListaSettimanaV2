@@ -8,21 +8,21 @@ import java.util.stream.Collectors;
 public class CarBuilder {
 
     private final CarBuilderProperty carBuilderProperty;
-    private final Map<String, Integer> person_NumberOfTimesOwnCar;
+    private final Map<String, Integer> person_NumberOfTimesPizzeriaCar;
 
     public CarBuilder(CarBuilderProperty propertyCar) {
         this.carBuilderProperty = propertyCar;
-        this.person_NumberOfTimesOwnCar = new HashMap<>();
+        this.person_NumberOfTimesPizzeriaCar = new HashMap<>();
         for(Person e : carBuilderProperty.getPeopleOwnCar()){
-            this.person_NumberOfTimesOwnCar.put(e.getAbbreviation(), 0);
+            this.person_NumberOfTimesPizzeriaCar.put(e.getAbbreviation(), 0);
         }
 
     }
 
     private Person takeMin(List<Tuple<Person,Boolean>> l){
-        Tuple<Person, Integer> min = new Tuple<>(l.get(0).getT1(), person_NumberOfTimesOwnCar.get(l.get(0).getT1().getAbbreviation()));
+        Tuple<Person, Integer> min = new Tuple<>(l.get(0).getT1(), person_NumberOfTimesPizzeriaCar.get(l.get(0).getT1().getAbbreviation()));
         for(Tuple<Person,Boolean> e : l){
-            int numeroVolteE = person_NumberOfTimesOwnCar.get(e.getT1().getAbbreviation());
+            int numeroVolteE = person_NumberOfTimesPizzeriaCar.get(e.getT1().getAbbreviation());
             if(numeroVolteE <= min.getT2()){
                 min = new Tuple<>(e.getT1(), numeroVolteE);
             }
@@ -110,7 +110,7 @@ public class CarBuilder {
                     for(int i = 0; i < formula; i++){
                         if(l.size()!=0){
                             Person min = takeMin(l);
-                            person_NumberOfTimesOwnCar.put(min.getAbbreviation(), person_NumberOfTimesOwnCar.get(min.getAbbreviation()) + 1);
+                            person_NumberOfTimesPizzeriaCar.put(min.getAbbreviation(), person_NumberOfTimesPizzeriaCar.get(min.getAbbreviation()) + 1);
                             personeDaLasciareLaFlagFalse.add(new Tuple<>(min,true));
                             l.remove(new Tuple<>(min,true));
                         }
@@ -150,10 +150,10 @@ public class CarBuilder {
     }
 
     private int minAux(){
-        return Collections.min(person_NumberOfTimesOwnCar.values());
+        return Collections.min(person_NumberOfTimesPizzeriaCar.values());
     }
     private int maxAux(){
-        return Collections.max(person_NumberOfTimesOwnCar.values());
+        return Collections.max(person_NumberOfTimesPizzeriaCar.values());
     }
     public boolean isFair(int i){
         boolean bool = maxAux() - minAux() <= i;
@@ -166,17 +166,17 @@ public class CarBuilder {
     }
 
     private void reset() {
-        for(Map.Entry<String, Integer> e : person_NumberOfTimesOwnCar.entrySet()){
+        for(Map.Entry<String, Integer> e : person_NumberOfTimesPizzeriaCar.entrySet()){
             e.setValue(0);
         }
     }
 
     public Integer getValueFromPerson(String p){
-        return person_NumberOfTimesOwnCar.get(p);
+        return person_NumberOfTimesPizzeriaCar.get(p);
     }
 
-    public Map<String, Integer> getPerson_NumberOfTimesOwnCar() {
-        return person_NumberOfTimesOwnCar;
+    public Map<String, Integer> getPerson_NumberOfTimesPizzeriaCar() {
+        return person_NumberOfTimesPizzeriaCar;
     }
 
     public static CarBuilderProperty createPropertyCar(List<Person> listOfPeople, int numberOfPizzeriaCar){

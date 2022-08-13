@@ -23,6 +23,7 @@ public class Person {
         this.means = means;
     }
 
+
     public Person(String m) {
         this.abbreviation = m;
     }
@@ -59,6 +60,7 @@ public class Person {
         return cond;
 
     }
+
     public String getName(){
         return name;
     }

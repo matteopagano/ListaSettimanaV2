@@ -30,7 +30,6 @@ public class DayOfList {
         return listOfPeople;
     }
 
-
     public List<Person> getListOfPeople() {
         List<Person> list = new ArrayList<>();
         for (Tuple<Person, Boolean> e : this.listOfPeople){
