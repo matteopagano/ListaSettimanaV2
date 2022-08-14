@@ -74,7 +74,7 @@ public class WeeklyList {
 
             if(carBuilder.isFair(1)){
                 System.out.println("Distanza Corretta");
-                System.out.println(carBuilder.getPerson_NumberOfTimesOwnCar());
+                System.out.println(carBuilder.getPerson_NumberOfTimesPizzeriaCar());
                 printListInOrder();
                 sendToPrinter();
                 return true;
@@ -156,12 +156,12 @@ public class WeeklyList {
             for(Day g : p.getDaysOfAbsence()){
                 switch (g.getDay()) {
                     case "Lunedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getLunedi() ) + 1);
-                    case "Martedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getMartedi() ) + 1);
-                    case "Mercoledì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getMercoledi() ) + 1);
-                    case "Giovedì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getGiovedi() ) + 1);
-                    case "Venerdì" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getVenerdi() ) + 1);
-                    case "Sabato" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getSabato() ) + 1);
-                    case "Domenica" -> occupiedSlots.replace(Day.getLunedi(),occupiedSlots.get(Day.getDomenica() ) + 1);
+                    case "Martedì" -> occupiedSlots.replace(Day.getMartedi(),occupiedSlots.get(Day.getMartedi() ) + 1);
+                    case "Mercoledì" -> occupiedSlots.replace(Day.getMercoledi(),occupiedSlots.get(Day.getMercoledi() ) + 1);
+                    case "Giovedì" -> occupiedSlots.replace(Day.getGiovedi(),occupiedSlots.get(Day.getGiovedi() ) + 1);
+                    case "Venerdì" -> occupiedSlots.replace(Day.getVenerdi(),occupiedSlots.get(Day.getVenerdi() ) + 1);
+                    case "Sabato" -> occupiedSlots.replace(Day.getSabato(),occupiedSlots.get(Day.getSabato() ) + 1);
+                    case "Domenica" -> occupiedSlots.replace(Day.getDomenica(),occupiedSlots.get(Day.getDomenica() ) + 1);
                 }
             }
         }
